@@ -11,7 +11,7 @@ class ÀÚÆÇ±â {
 	    return cola;
 	  }
 	}
-
+ 
 	class MemoryExample {
 
 	  int money = 500;
