@@ -65,6 +65,7 @@ public class AnimalEx02 {
 //			//fly메소드를 가진  놈이라는 걿 확싱
 //			((Bird)b).fly();
 
+		
 		start(new Dog());
 		start(new Bird());
 
