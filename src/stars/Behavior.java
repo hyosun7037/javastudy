@@ -12,7 +12,6 @@ public interface Behavior {
 
 	/* public  abstract*/ void attack(Behavior u);
 
-
 }
 
 //협의해서 만들면 프로토콜
