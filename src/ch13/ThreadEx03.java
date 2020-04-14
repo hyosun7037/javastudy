@@ -29,6 +29,7 @@ class MoneyChange {
 
 public class ThreadEx03 {
 
+	
 	public static void main(String[] args) {
 		MoneyChange mc = new MoneyChange(); // 주도권이 main 쓰레드에 있음
 		mc.accept(new Callback() { // return 받을 필요 X, int 지워줌
