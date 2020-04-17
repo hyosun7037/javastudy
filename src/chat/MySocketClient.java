@@ -23,7 +23,7 @@ public class MySocketClient {
 		
 		//new Thread(new ReadThread()).start(); 위의 세줄과 똑같은 말
 		
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
 		
 		BufferedReader keyboardIn = new BufferedReader(new InputStreamReader(System.in));
 				
