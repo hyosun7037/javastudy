@@ -1,19 +1,28 @@
 package ch09;
 
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.TextArea;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-class MyButton extends JButton{
-	//커스터마이징 할 디자인 소스, 오버라이딩 해서 사용
-}
+public class SwingEx01 extends JFrame {
 
-public class SwingEx01 extends JFrame { // swing 자바 스윙 상속
-
-	public SwingEx01() { // 생성자 생성
-		setTitle("첫번째 프레임"); // 프레임은 윈도우 창
-		setSize(500, 300);
-		add(new JButton("클릭"));
-		setVisible(true);
+	public SwingEx01() {
+		//JFrame의 기본 패널에 접근하기
+		Container contentPane = getContentPane(); // JFrame이 들고 있는 기본 panel을 들고옴
+		//기본 패널에 버튼 그리기
+		contentPane.add(new JButton("첫번째 버튼"));
+		contentPane.add(new TextArea());
+		//JFrame의기본 패널은 BorderLayout -> FlowLayout 으로 변경
+		contentPane.setLayout(new FlowLayout()); 
+		//제목 그리기
+		setTitle("300x300 스윙 프레임 만들기");
+		// 크기 300,300 으로 그리기
+		setSize(300, 300);
+		//화면에 보이게 하기
+		setVisible(true); // painting(이 때 그림이 그려짐)
 	}
 
 	public static void main(String[] args) {

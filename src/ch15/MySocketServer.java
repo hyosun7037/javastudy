@@ -16,13 +16,12 @@ public class MySocketServer {
 
 		serverSocket = new ServerSocket(15000); // 서버 소켓 생성
 		socket = serverSocket.accept(); // 요청대기
-		
+
 		System.out.println("요청이 들어옴");
 
 		br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		String msg = "";
 
-		
 		while ((msg = br.readLine()) != null) {
 			System.out.println("상대방 :" + msg);
 		}
