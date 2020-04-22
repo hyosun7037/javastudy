@@ -32,7 +32,7 @@ public class GraphicFillEx extends JFrame{
 			g.setColor(Color.orange);
 			int[]x = {30,10,30,60};
 			int[]y = {250,275,300,275};
-			g.fillPolygon(x,y,4);
+			g.fillPolygon(x,y,4); 
 		}
 	}
 	

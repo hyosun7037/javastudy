@@ -38,10 +38,10 @@ public class EventEx06 extends JFrame {
 
 					switch (e.getKeyCode()) {
 					case KeyEvent.VK_LEFT: // 왼쪽 키를 클릭하면 작동
-						imgY = imgY - 10;
+						imgX = imgX - 10;
 						break; // break를 걸어야 다음 문장을 검사 X
 					case KeyEvent.VK_RIGHT:
-						imgY = imgY + 10;
+						imgX = imgX + 10;
 						break;
 					case KeyEvent.VK_SPACE:
 						new Thread(new Runnable() {

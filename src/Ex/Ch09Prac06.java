@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 public class Ch09Prac06 extends JFrame {
 
 	public Ch09Prac06() {
-		setTitle("Random Labels");
+		super("Random Labels");
 		Container c = getContentPane();
 		c.setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,6 +20,11 @@ public class Ch09Prac06 extends JFrame {
 			JLabel label = new JLabel(Integer.toString(i));
 			label.setOpaque(true);
 			label.setBackground(Color.blue);
+			int x = (int)(Math.random()*200) + 50;
+			int y = (int)(Math.random()*200) + 50;
+			label.setLocation(x,y);
+			label.setSize(10,10);
+			c.add(label);
 		}
 
 		setSize(300, 300);
@@ -27,7 +32,7 @@ public class Ch09Prac06 extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new Ch09Prac01();
+		new Ch09Prac06();
 	}
 
 }
