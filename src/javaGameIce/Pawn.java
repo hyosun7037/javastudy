@@ -1,4 +1,4 @@
-package javaGame;
+package javaGameIce;
 
 import java.awt.Graphics;
 import java.awt.Image;
