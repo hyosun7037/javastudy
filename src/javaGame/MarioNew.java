@@ -57,27 +57,26 @@ public class MarioNew extends JFrame {
 
 	//// 이미지 ////
 
-		ImageIcon bg = new ImageIcon("img/BgForest.png");
-		Image b = bg.getImage();
+	ImageIcon bg = new ImageIcon("img/BgForest.png");
+	Image b = bg.getImage();
 
-		ImageIcon land = new ImageIcon("img/BgForest_1.png");
-		Image l = land.getImage();
+	ImageIcon land = new ImageIcon("img/BgForest_1.png");
+	Image l = land.getImage();
 
-		int b1 = 0;
-		int b2 = b.getWidth(null); // 따라오는 이미지
+	int b1 = 0;
+	int b2 = b.getWidth(null); // 따라오는 이미지
 
-		// 원본 캐릭터 이미지
-		ImageIcon cookie = new ImageIcon("img/ch_fire.gif");
-		Image c = cookie.getImage();
+	// 원본 캐릭터 이미지
+	ImageIcon cookie = new ImageIcon("img/ch_fire.gif");
+	Image c = cookie.getImage();
 
-		// 다운 이미지
-		ImageIcon cookie2 = new ImageIcon("img/ch_fire_down.gif");
-		Image down = cookie2.getImage();
+	// 다운 이미지
+	ImageIcon cookie2 = new ImageIcon("img/ch_fire_down.gif");
+	Image down = cookie2.getImage();
 
-		// 점프 이미지
-		ImageIcon cookieJump = new ImageIcon("img/ch_fire_jump.gif");
-		Image cj = cookieJump.getImage();
-		
+	// 점프 이미지
+	ImageIcon cookieJump = new ImageIcon("img/ch_fire_jump.gif");
+	Image cj = cookieJump.getImage();
 
 	//// 생성자////
 	public MarioNew() {
@@ -93,7 +92,7 @@ public class MarioNew extends JFrame {
 
 	//////////////////// repaint 전용 스레드 ////////////////////
 	class MousePanel extends JPanel {
-		public MousePanel() { 
+		public MousePanel() {
 			// 옆으로
 			setFocusable(true);
 			new Thread(new Runnable() {
@@ -174,58 +173,58 @@ public class MarioNew extends JFrame {
 
 	}
 
+///////////////////////// 점프 동작 구현 시작 /////////////////////////
+	class Up {
+		public Up() {
+			new Thread(new Runnable() {
+				@Override
+				public void run() { //// 이 안에다가 이미지 교체
+
+// 이미지교체
+					if (c == cookie.getImage()) { // 원본이미지
+						c = cookieJump.getImage(); // 다운이미지
+					}
+
+// 점프동작
+					while (time > 0) {
+						if (time > 30) {
+							imgY = imgY - 5;
+						} else {
+							imgY = imgY + 5;
+						}
+						time--;
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					time = 60;
+					spaceP = true;
+				}
+
+			}).start();
+		}
+	} // 점프동작 구현 끝
+
+///////////////////////////////// 내리기 동작 구현 시작 /////////////////////////////////
+	class Down {
+		public Down() {
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					if (c == cookie.getImage()) { // 원본이미지
+						c = cookie2.getImage(); // 다운이미지
+					}
+				}
+			}).start();
+		}
+
+	} // 내리기 동작 구현 끝
+
 	public static void main(String[] args) {
 		new MarioNew();
 	}
 
 }
-
-///////////////////////// 점프 동작 구현 시작 /////////////////////////
-class Up {
-	public Up() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() { //// 이 안에다가 이미지 교체
-
-				// 이미지교체
-				if (c == cookie.getImage()) { // 원본이미지
-					c = cookieJump.getImage(); // 다운이미지
-				}
-
-				// 점프동작
-				while (time > 0) {
-					if (time > 30) {
-						imgY = imgY - 5;
-					} else {
-						imgY = imgY + 5;
-					}
-					time--;
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				time = 60;
-				spaceP = true;
-			}
-
-		}).start();
-	}
-} // 점프동작 구현 끝
-
-///////////////////////////////// 내리기 동작 구현 시작 /////////////////////////////////
-class Down {
-	public Down() {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				if (c == cookie.getImage()) { // 원본이미지
-					c = cookie2.getImage(); // 다운이미지
-				}
-			}
-		}).start();
-	}
-
-} // 내리기 동작 구현 끝
