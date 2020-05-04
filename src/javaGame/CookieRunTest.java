@@ -171,8 +171,7 @@ public class CookieRunTest extends JFrame {
 
 	class MousePanel extends JPanel {
 		public MousePanel() {
-			setFocusable(true);
-			
+			setFocusable(true);			
 			
 			////////// 이미지맵 구현 ///////////
 			try {
