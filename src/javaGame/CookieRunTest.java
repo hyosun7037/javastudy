@@ -99,7 +99,7 @@ public class CookieRunTest extends JFrame {
 	int cookieHeight = cookie.getImage().getHeight(null);
 
 	// 다운 이미지 (슬라이딩)
-	ImageIcon cookieDown = new ImageIcon("img/fallTest.png");
+	ImageIcon cookieDown = new ImageIcon("img/slideTest.png");
 	Image down = cookieDown.getImage();
 
 	// 점프 이미지
@@ -115,7 +115,7 @@ public class CookieRunTest extends JFrame {
 	Image je = cookieDoubleJumpEnd.getImage();
 	
 	// 공격받은 캐릭터 이미지
-	ImageIcon cookieAttack = new ImageIcon("img/cookieTest.png");
+	ImageIcon cookieAttack = new ImageIcon("img/hitTest.png");
 	Image ca = cookieAttack.getImage();
 		
 	// 아이템 이미지
@@ -235,12 +235,12 @@ public class CookieRunTest extends JFrame {
 									List<Integer> countList = new ArrayList<>(); // 쓰레드 안에 임시적으로 선언
 									
 									int tempField; // 발판 위치를 계속 스캔하는 변수
-									int tempNowField = 2000; // nowField를 세팅
+									int tempNowField = 2000; // snowField를 세팅
 									
 									for (int i = 0; i < fieldList.size(); i++) {
 										int tempX = fieldList.get(i).getX(); // 발판의 X값
 										
-										if(tempX >= 160 && tempX < 240) { // 발판이 캐릭범위안
+										if(tempX >= 0 && tempX < 80) { // 발판이 캐릭범위안
 											tempField = fieldList.get(i).getY(); // 발판의 y값
 											
 //											System.out.println(imgY + cookieHeight + "  " + tempField);
@@ -451,10 +451,10 @@ public class CookieRunTest extends JFrame {
 					fieldList.remove(tempJelly);
 					
 				}else {
-					tempJelly.setX(tempJelly.getX() -1);
+					tempJelly.setX(tempJelly.getX() - 1);
 					
-					if(tempJelly.getY() > imgY +200 && tempJelly.getY() < imgY + cookieHeight // 임시, 추후에 수정
-					&& tempJelly.getX() > 160 && tempJelly.getX() < 240) {
+					if(tempJelly.getY() > imgY && tempJelly.getY() < imgY + cookieHeight // 임시, 추후에 수정
+					&& tempJelly.getX() > 0 && tempJelly.getX() < 80) {
 						tempJelly.setImage(effect.getImage());
 					}
 				}
@@ -470,12 +470,11 @@ public class CookieRunTest extends JFrame {
 				
 				
 				if(tempAttack.getY() > imgY && tempAttack.getY() < imgY + cookieHeight
-				&& tempAttack.getX() > 160 && tempAttack.getX() < 240) {
+				&& tempAttack.getX() > 0 && tempAttack.getX() < 80) {
 					new Thread(new Runnable() {
 						
 						@Override
 						public void run() {
-							 
 							try {
 								c = cookieAttack.getImage();
 								Thread.sleep(3000);
@@ -493,8 +492,8 @@ public class CookieRunTest extends JFrame {
 			
 			buffg.drawImage(buffImage, 0, 0, null);
 			
-//			buffg.drawLine(160, 0, 160, 500); // 범위 보기
-//			buffg.drawLine(240, 0, 240, 500); // 범위 보기
+//			buffg.drawLine(0, 0, 0, 500); // 범위 보기
+//			buffg.drawLine(80, 0, 80, 500); // 범위 보기
 		}
 
 	}
