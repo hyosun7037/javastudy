@@ -14,11 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.json.simple.ItemList;
-
-import javaGame.CookieRunOrigin.Up;
 import test.Foot;
-import test.Jelly;
 
 //구현 단계
 //1. 맵을 뒤로 이동 시킬 수 있다. O
@@ -39,23 +35,26 @@ import test.Jelly;
 //
 //8. 가속화를 할 수 있다.
 //
+//9. 기타
 //창 사이즈 800 *480 / 발판사이즈 80 / 한칸짜리 장애물 80*80 / 부딪히는 범위 120*80 / 젤리 20*20 ~ 30*30 / 발판 아래 공간 / 캐릭터는 세번째 발판에 위치
 
 /////////////////// 오류 : 1. 점프할 때 전의 아이템들도 사라짐  / 3. 스페이스바를 꾹 누르면 점프 X / 3. 더블점프시 캐릭터 사라짐  //////////
 
 //프레임, 패널, 메인 한 공간
 
-public class CookieRun extends JFrame {
+public class CookieRunOrigin extends JFrame {
 
 	//// 변수 ////
 	MousePanel panel;
-
+	
 	int imgX = 0;
-	int imgY = 5; // 원래 40
-
+	int imgY = 5; //원래 40
+	
+	String fieldStr = "11111111111111111110111111111111111011111111111111111111111111111111111";
+	
 	int imgBgX = 0;
 	int imgBgY = 0;
-
+	
 	int time = 60;
 	int fieldY = 0;
 
@@ -63,31 +62,28 @@ public class CookieRun extends JFrame {
 	int itemY = 50;
 
 	int count = 0; // 발판 확인 변수
-	int field = 300; // 발판높이
-
+	int field = 360; // 발판높이
+	
 	int nowField = field; // 캐릭터 높이에 따른 발판 위치 조정 변수
-
+	
 	boolean fall = false; // 현재 떨어지는지 확인
 	boolean jump = false; // 현재 점프중인지 확인
 
 	int doubleJump = 0; // 점프 카운트 (2가 되면 더블점프 상태)
-
-	boolean downKeyOn = false; // 다운키 기본 설정
-
-	private AlphaComposite alphaComposite; // 투명도 조절을 위한 변수
-
-	/////////////////////// 이미지 ////////////////////////////////////
-
-	// 발판 이미지
-	ImageIcon landIc = new ImageIcon("img/land.png");
+	
+	boolean downKeyOn = false;
+	
+	// 투명도 조절을 위한 변수
+	private AlphaComposite alphaComposite; 
+	
+	//// 이미지 ////
+	ImageIcon landIc = new ImageIcon("img/land.png"); // 발판
 	Image landimg = landIc.getImage();
-
-	// bg 움직이는 이미지 (계속 반복)
-	ImageIcon bg = new ImageIcon("img/bg1.png");
+	
+	ImageIcon bg = new ImageIcon("img/bg1.png"); // bg 움직이는 이미지
 	Image b = bg.getImage();
 
-	// bg 고정이미지
-	ImageIcon bg2 = new ImageIcon("img/bg2.png");
+	ImageIcon bg2 = new ImageIcon("img/bg2.png"); // bg 고정이미지
 	Image bgTwo = bg2.getImage();
 
 	int b1 = 0;
@@ -96,64 +92,62 @@ public class CookieRun extends JFrame {
 	// 원본 캐릭터 이미지
 	ImageIcon cookie = new ImageIcon("img/player_origin.gif");
 	Image c = cookie.getImage();
-	int cookieHeight = cookie.getImage().getHeight(null);
 
 	// 다운 이미지 (슬라이딩)
-	ImageIcon cookieDown = new ImageIcon("img/player_down.gif");
-	Image down = cookieDown.getImage();
+	ImageIcon cookie2 = new ImageIcon("img/player_down.gif");
+	Image down = cookie2.getImage();
 
 	// 점프 이미지
 	ImageIcon cookieJump = new ImageIcon("img/player_up.gif");
 	Image cj = cookieJump.getImage();
-
+	
 	// 더블점프 이미지
 	ImageIcon cookieDoubleJump = new ImageIcon("img/player_doubleup.gif");
 	Image dj = cookieDoubleJump.getImage();
-
+	
 	// 더블점프 후 떨어지는 이미지
 	ImageIcon cookieDoubleJumpEnd = new ImageIcon("img/player_jumpend.png");
 	Image je = cookieDoubleJumpEnd.getImage();
 
-	// 아이템 이미지
+	// 아이템 이미지 (이미지 넣기 완료)
 	ImageIcon item = new ImageIcon("img/item.gif");
 	Image item_i = item.getImage();
-
-	// 장애물 이미지
-	ImageIcon attack = new ImageIcon("img/attack.gif");
-	Image at = attack.getImage();
-
-	// 반짝이는 이미지
-	ImageIcon effect = new ImageIcon("img/tw2.png");
-	Image ef = effect.getImage();
-
+	
 	// 더블 버퍼 선언 (전역에 추가)
 	Image buffImage;
 	Graphics buffg;
-
+	
+	// 아이템 이펙트 효과 이미지
+	ImageIcon effIc = new ImageIcon("img/effTest1.png");
+	
 	// 현재시간 가져오기
 	static long getTime() {
 		return Timestamp.valueOf(LocalDateTime.now()).getTime();
 	}
-
+	
 	// substring으로 발판 정보 검색
-	static int getGround(String ground, int index) {
-		return Integer.parseInt(ground.substring(index, index + 1));
-	}
-
-	// 젤리 담을 리스트
-	List<Jelly> jellyList = new ArrayList<>();
+		static int getGround(String ground, int index) {
+			return Integer.parseInt(ground.substring(index, index + 1));
+		}
 
 	// 발판 객체를 담을 리스트
-	List<Foot> fieldList = new ArrayList<>();
+	List<Foot> fieldList = new ArrayList<>(); // 발판 객체를 담을 리스트
+	
+	// 아이템 리스트 (리스트 생성완료)
+	List<Item> itemList1 = new ArrayList<>();
+	List<Item> itemList2 = new ArrayList<>();
+	List<Item> itemList3 = new ArrayList<>();
+	List<Item> itemList4 = new ArrayList<>();
+	List<Item> itemList5 = new ArrayList<>();
 
-	// 장애물 리스트
-	List<Attack> attackList = new ArrayList<>();
-
-	int[][] colorArr; // 이미지의 x,y좌표의 색값을 저장하는 2차원배열 colorArr[0][0]을 호출하면 16777215
-	int[] sizeArr; // 이미지의 넓이와 높이를 가져오는 1차원 배열 temp
+	int[] itemInfite1 = { 0,0,0,0,0,0,1,1,1,1,0,0,1,0,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,0,1,1,1,0,0,0,1,0,1,0,0,0,1,1,1,0,0,0,0};
+	int[] itemInfite2 = { 0,0,0,0,0,0,1,1,1,1,0,0,1,0,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,0,1,1,1,0,0,0,1,0,1,0,0,0,1,1,1,0,0,0,0};
+	int[] itemInfite3 = { 0,0,0,0,0,0,1,1,1,1,0,0,1,0,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,0,1,1,1,0,0,0,1,0,1,0,0,0,1,1,1,0,0,0,0};
+	int[] itemInfite4 = { 0,0,0,0,0,0,1,1,1,1,0,0,1,0,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,0,1,1,1,0,0,0,1,0,1,0,0,0,1,1,1,0,0,0,0};
+	int[] itemInfite5 = { 0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,0,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
 	//// 생성자////
-	public CookieRun() {
+	public CookieRunOrigin() {
 		panel = new MousePanel();
 		setTitle("Cookie Run : Stage1");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -165,97 +159,73 @@ public class CookieRun extends JFrame {
 
 	class MousePanel extends JPanel {
 		public MousePanel() {
+			// 옆으로
 			setFocusable(true);
 			
-			
-			////////// 이미지맵 구현 ///////////
-			try {
-				sizeArr = Bf2.getSize("img/firstMap.png");
-				colorArr = Bf2.getPic("img/firstMap.png");
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			
-			int maxX = sizeArr[0];
-			int maxY = sizeArr[1];
-			
-			
-			/////////// 패널에서 이미지 불러오기 ///////////
-			for (int i = 0; i < maxX; i+=2) { // 발판은 4칸을 차지하는 공간, 2,2사이즈로 반복문
-				for (int j = 0; j < maxY; j+=2) { // 색 값이 0일 경우 (검은색)
-					if(colorArr[i][j] == 0) {
-						fieldList.add(new Foot(landimg, i*40, j*40, 80, 80)); // 좌표에 40을 곱하고, 넓이와 높이는 80
-					}
+			// 발판 추가
+			for (int i = 0; i < fieldStr.length(); i++) {
+				int tempX = i * landimg.getWidth(null);
+				if(getGround(fieldStr, i) == 1) {
+					fieldList.add(new Foot(landimg, tempX, 320, landimg.getWidth(null), landimg.getHeight(null)));
 				}
 			}
 			
-			for (int i = 0; i < maxX; i+=1) { // 젤리는 1칸을 차지, 1,1사이즈로 반복문
-				for (int j = 0; j < maxY; j+=1) {
-					if(colorArr[i][j] == 16773632) { // 색 값이 16773632일 경우 (노란색)
-						jellyList.add(new Jelly(item.getImage(), i*40, j*40, 30, 30, 255)); // 좌표에 40곱하고, 넓이와 높이는 30으로 한다.
-					}
-				}				
-			}
+			
+
 			
 			
-			for (int i = 0; i < maxX; i+=2) { // 
-				for (int j = 0; j < maxY; j+=2) {
-					if(colorArr[i][j] == 16711680) { // 색 값이 16711680일 경우 (빨간색)
-						attackList.add(new Attack(attack.getImage(), i*40, j*40, 80, 80, 255)); // 좌표에 40곱하고, 넓이와 높이는 30으로 한다.
-					}
-				}				
-			}
 			
-			
-			///////////////// 발판 좌표 이동 쓰레드 ////////////////////
+			// 발판 좌표 이동 쓰레드
 						new Thread(new Runnable() {
 
 							@Override
 							public void run() {
 								while (true) {
 									for (int i = 0; i < fieldList.size(); i++) {
-										fieldList.get(i).setX(fieldList.get(i).getX() - 4);
-									} // 발판
-									
-									for(int i = 0; i < jellyList.size(); i++) {
-										jellyList.get(i).setX(jellyList.get(i).getX() -4);
-									} // 젤리
-									
-									for(int i = 0; i < attackList.size(); i++) {
-										attackList.get(i).setX(attackList.get(i).getX() -4);
-									} // 장애물
-									
-									
-									List<Integer> countList = new ArrayList<>(); // 쓰레드 안에 임시적으로 선언
-									
-									int tempField; // 발판 위치를 계속 스캔하는 변수
-									int tempNowField = 2000; // nowField를 세팅
-									
+										fieldList.get(i).setX(fieldList.get(i).getX() - 3);
+									}
+									int range = (int) (landimg.getWidth(null) * 1.3); // 캐릭터가 서 있을 수 있는 위치
 									for (int i = 0; i < fieldList.size(); i++) {
-										int tempX = fieldList.get(i).getX(); // 발판의 X값
-										
-										if(tempX >= 160 && tempX < 240) { // 발판이 캐릭범위안
-											tempField = fieldList.get(i).getY(); // 발판의 y값
-											
-//											System.out.println(imgY + cookieHeight + "  " + tempField);
-											
-											//발판위치가 tempNowField보다 작고, 발바닥의 위치가 tempField보다 위에 있다면
-											if(tempField < tempNowField && imgY + cookieHeight <= tempField) {
-												tempNowField = tempField;
-											}
+										if (fieldList.get(i).getX() >= 0 && fieldList.get(i).getX() < range) {
+											count = 1;
+											break;
+										} else if (i == fieldList.size() - 1) {
+											count = 0;
 										}
 									}
-									nowField = tempNowField; // 결과를 nowField에 업데이트
-									
 									try {
 										Thread.sleep(10);
-									} catch (InterruptedException e) {
+									} catch (Exception e) {
 										e.printStackTrace();
 									}
 								}
 							}
 						}).start();
 						
+						
+						// 캐릭터의 높이에 따라 발판 위치를 지정하는 쓰레드
+						new Thread(new Runnable() {
+
+							@Override
+							public void run() {
+								while (true) {
+									int foot = imgY + c.getHeight(null);
+
+									if (count == 0) {
+										nowField = 2000;
+									} else if (count == 0 && foot > field) {
+										nowField = 2000;
+									} else if (count == 1 && foot <= field) {
+										nowField = field;
+									}
+									try {
+										Thread.sleep(10);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								}
+							}
+						}).start();
 						
 						
 			////////////////// 낙하 스레드 /////////////////////////
@@ -264,10 +234,10 @@ public class CookieRun extends JFrame {
 				public void run() {
 					while (true) {
 						// 발바닥 위치는 이미지의 Y위치 + 이미지의 높이
-						int foot = imgY + cookieHeight;
+						int foot = imgY + c.getHeight(null);
 						
 						// 발바닥이 땅보다 위에 있으면 작동
-						if (foot < nowField && !jump && !fall)  { // 점프중 X, 공중에 있고, 떨어지는 중이 아닐 때 작동
+						if (foot < nowField && jump == false && fall == false)  { // 점프중 X, 공중에 있고, 떨어지는 중이 아닐 때 작동
 							fall = true; // 떨어지는 중으로 전환
 							System.out.println("낙하시작");
 							
@@ -290,7 +260,7 @@ public class CookieRun extends JFrame {
 								}
 								
 								imgY = imgY + fallY; // Y좌표에 낙하량 더하기
-								foot = imgY + cookieHeight; // 현재 발바닥 위치를 저장
+								foot = imgY + c.getHeight(null); // 현재 발바닥 위치를 저장
 
 								if(jump == true) { // 떨어지다가 더블 점프를 하면 낙하중지
 									break;
@@ -313,8 +283,8 @@ public class CookieRun extends JFrame {
 							
 							
 							//추후에 추가
-							if(downKeyOn == true && !jump && !fall & c!=cookieDown.getImage()) {
-								c = cookieDown.getImage(); // 누운 이미지로 변경
+							if(downKeyOn && !jump && !fall & c!=cookie2.getImage()) {
+								c = cookie2.getImage(); // 누운 이미지로 변경
 							}else if(!downKeyOn && !jump && !fall && c!=cookie.getImage()) {
 								c = cookie.getImage();
 							}
@@ -329,6 +299,24 @@ public class CookieRun extends JFrame {
 				}
 			}).start();
 			
+			///////////////// 아이템 리스트 (아이템 배열이 5개면 if문 다섯개 추가) 무한으로 생성하는 것은 추후 수정 ///////////////////
+			for (int i = 0; i < 50; i++) {
+				if (itemInfite1[i] == 1) {
+					itemList1.add(new Item(item_i, 0, 200 + i * 100, 170));}
+				
+				if (itemInfite2[i] == 1) {
+					itemList2.add(new Item(item_i, 0, 200 + i * 140, 100));}
+				
+				if (itemInfite3[i] == 1) {
+					itemList3.add(new Item(item_i, 0, 200 + i * 180, 170));}
+				
+				if (itemInfite4[i] == 1) {
+					itemList4.add(new Item(item_i, 0, 200 + i * 220, 100));}
+				
+				if (itemInfite5[i] == 1) {
+					itemList5.add(new Item(item_i, 0, 200 + i * 260, 100));}
+				i++;
+			}
 
 			//////////////////// repaint 전용 스레드 ////////////////////
 			new Thread(new Runnable() {
@@ -360,7 +348,71 @@ public class CookieRun extends JFrame {
 						if (b2 < -(b.getWidth(null))) {
 							b2 = b.getWidth(null) - 5;
 						}
-						
+
+						////////////////// 아이템 스레드 /////////////////
+
+						////////////////////// 아이템 이동 //////////////////////////
+						for (int i = 0; i < itemList1.size(); i++) {
+							itemList1.get(i).setX(itemList1.get(i).getX() - 7);
+						}
+
+						for (int i = 0; i < itemList2.size(); i++) {
+							itemList2.get(i).setX(itemList2.get(i).getX() - 7);
+						}
+
+						for (int i = 0; i < itemList3.size(); i++) {
+							itemList3.get(i).setX(itemList3.get(i).getX() - 7);
+						}
+
+						for (int i = 0; i < itemList4.size(); i++) {
+							itemList4.get(i).setX(itemList4.get(i).getX() - 7);
+						}
+
+						for (int i = 0; i < itemList5.size(); i++) {
+							itemList5.get(i).setX(itemList5.get(i).getX() - 7);
+						}
+
+						////////////////////////////////////// 아이템 소멸 /////////////////////////////////
+						for (int i = 0; i < itemList1.size(); i++) {
+							if (itemList1.get(i).getX() < imgX + c.getWidth(null) -200
+									&& itemList1.get(i).getY() > imgY + c.getHeight(null) -100) {
+
+								itemList1.remove(itemList1.get(i));
+							}
+						} // for문 다섯개
+
+						for (int i = 0; i < itemList2.size(); i++) {
+							if (itemList2.get(i).getX() < imgX + c.getWidth(null) -200
+									&& itemList2.get(i).getY() > imgY + c.getHeight(null) -100) {
+
+								itemList2.remove(itemList2.get(i));
+							}
+						} // for문 다섯개
+
+						for (int i = 0; i < itemList3.size(); i++) {
+							if (itemList3.get(i).getX() < imgX + c.getWidth(null) -200
+									&& itemList3.get(i).getY() > imgY + c.getHeight(null) -100) {
+
+								itemList3.remove(itemList3.get(i));
+							}
+						} // for문 다섯개
+
+						for (int i = 0; i < itemList4.size(); i++) {
+							if (itemList4.get(i).getX() < imgX + c.getWidth(null) -200
+									&& itemList4.get(i).getY() > imgY + c.getHeight(null) -100) {
+
+								itemList4.remove(itemList4.get(i));
+							}
+						} // for문 다섯개
+
+						for (int i = 0; i < itemList5.size(); i++) {
+							if (itemList5.get(i).getX() < imgX + c.getWidth(null) -200
+									&& itemList5.get(i).getY() > imgY + c.getHeight(null) -100) {
+
+								itemList5.remove(itemList5.get(i));
+							}
+						} // for문 다섯개
+
 						repaint();
 						try {
 							Thread.sleep(20);
@@ -383,8 +435,8 @@ public class CookieRun extends JFrame {
 					}
 					if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 						downKeyOn = false;
-						if(c != cookieDown.getImage() && !jump && !fall) {
-							c = cookieDown.getImage(); //누웠을 때 이미지 변경
+						if(c != cookie2.getImage() && !jump && !fall) {
+							c = cookie2.getImage(); //누웠을 때 이미지 변경
 						}
 					}
 				}
@@ -407,62 +459,44 @@ public class CookieRun extends JFrame {
 		}
 
 		@Override
-		protected void paintComponent(Graphics buffg) {
-			
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
 			
 			if(buffg == null) {
 				buffImage = createImage(this.getWidth(), this.getHeight());
 				if(buffImage == null) {
 					System.out.println("더블 버퍼링용 오프 스크린 생성 실패");
-				}else {
+				}else{
 					buffg = buffImage.getGraphics();
 				}
 			}
-			super.paintComponent(buffg);
+			
 			//오류 수정후 더블 버퍼 추가
 			
 			buffg.drawImage(dj, 0, 0, this);
-			buffg.drawImage(buffImage,0,0,this);
+			g.drawImage(buffImage,0,0,this);
 			
-			buffg.drawImage(b, b1, 0, this); // 배경
-			buffg.drawImage(b, b2, 0, this); // 뒤6따라 오는 배경
-			buffg.drawImage(bgTwo, 0, 0, 970, 500, this); // 땅 배경
-			buffg.drawImage(c, imgX, imgY, null); // 캐릭터
-			
+			g.drawImage(b, b1, 0, this); // 배경
+			g.drawImage(b, b2, 0, this); // 뒤6따라 오는 배경
+			g.drawImage(bgTwo, 0, 0, 970, 500, this); // 땅 배경
+			g.drawImage(c, imgX, imgY + 60, 250, 250, null); // 캐릭터
 
+			for (int i = 0; i < itemList1.size(); i++) {g.drawImage(itemList1.get(i).getImage(), itemList1.get(i).getX(), itemList1.get(i).getY(), 30, 30, this);}
+			for (int i = 0; i < itemList2.size(); i++) {g.drawImage(itemList2.get(i).getImage(), itemList2.get(i).getX(), itemList2.get(i).getY(), 30, 30, this);}
+			for (int i = 0; i < itemList3.size(); i++) {g.drawImage(itemList3.get(i).getImage(), itemList3.get(i).getX(), itemList3.get(i).getY(), 30, 30, this);}
+			for (int i = 0; i < itemList4.size(); i++) {g.drawImage(itemList4.get(i).getImage(), itemList4.get(i).getX(), itemList4.get(i).getY(), 30, 30, this);}
+			for (int i = 0; i < itemList5.size(); i++) {g.drawImage(itemList5.get(i).getImage(), itemList5.get(i).getX(), itemList5.get(i).getY(), 30, 30, this);}
+		
+		
 			for (int i = 0; i < fieldList.size(); i++) {
-				Foot tempFoot = fieldList.get(i);
-				buffg.drawImage(tempFoot.getImage(), tempFoot.getX(), tempFoot.getY(), tempFoot.getWidth(), tempFoot.getHeight(), null);
+				Image tempImg = fieldList.get(i).getImage();
+				int tempX = fieldList.get(i).getX();
+				int tempY = fieldList.get(i).getY();
+				int tempWidth = fieldList.get(i).getWidth();
+				int tempHeight = fieldList.get(i).getHeight();
+				g.drawImage(tempImg, tempX, tempY, tempWidth, tempHeight, null);
 			}
-			
-			////////////////// 캐릭터가 아이템을 먹으면 바뀌게 하기 //////////////////
-			for (int i = 0; i < jellyList.size(); i++) {
-				Jelly tempJelly = jellyList.get(i);
-				
-				if(tempJelly.getX() < -90) {
-					fieldList.remove(tempJelly);
-					
-				}else {
-					tempJelly.setX(tempJelly.getX() -1);
-					
-					if(tempJelly.getY() > imgY +200 && tempJelly.getY() < imgY + cookieHeight // 임시, 추후에 수정
-					&& tempJelly.getX() > 160 && tempJelly.getX() < 240) {
-						tempJelly.setImage(effect.getImage());
-					}
-				}
-				
-				buffg.drawImage(tempJelly.getImage(), tempJelly.getX(), tempJelly.getY(), tempJelly.getWidth(), tempJelly.getHeight(), null);
-				
-			}
-			for (int i = 0; i < attackList.size(); i++) {
-				Attack tempAttack = attackList.get(i);
-				buffg.drawImage(tempAttack.getImage(), tempAttack.getX(), tempAttack.getY(), tempAttack.getWidth(), tempAttack.getHeight(), null);
-			}
-			
-			buffg.drawImage(buffImage, 0, 0, null);
-			
-//			buffg.drawLine(160, 0, 160, 500); // 범위 보기
-//			buffg.drawLine(240, 0, 240, 500); // 범위 보기
+//			g.drawImage(c, landimg.getWidth(null) / 2, imgY, c.getWidth(null), c.getHeight(null), this);
 		}
 
 	}
@@ -476,7 +510,7 @@ public class CookieRun extends JFrame {
 				@Override
 				public void run() {
 					/// 더블점프 추가한부분 시작
-					doubleJump++; // 점프 횟수 증가
+					doubleJump++; // 점프 횟수 증가 //////////////// 여기서 수정..?
 					int nowJump = doubleJump; // 더블점프 저장
 					
 					jump = true; //점프중으로 변경
@@ -495,7 +529,7 @@ public class CookieRun extends JFrame {
 					//// 점프 구현
 					
 					// 발바닥 위치는 이미지의 Y위치 + 이미지의 높이
-					int foot = imgY + cookieHeight; // 발바닥의 위치 Y좌표 + 이미지의 높이
+					int foot = imgY + c.getHeight(null); // 발바닥의 위치 Y좌표 + 이미지의 높이
 						long t1 = getTime(); // 현재시간 가져오기
 						long t2;
 						int set = 8; // 점프 계수 설정(0~20)으로 바꿔보기
@@ -504,7 +538,7 @@ public class CookieRun extends JFrame {
 							t2 = getTime() - t1;  // 지금 시간에서 t1 빼기
 							jumpY = set - (int)((t2) / 40); // jump 세팅
 							imgY = imgY - jumpY; //Y값 변경
-							foot = imgY + cookieHeight; //발바닥 위치 저장
+							foot = imgY + c.getHeight(null); //발바닥 위치 저장
 							repaint();
 							
 							/// 더블점프 추가한부분 시작
@@ -512,8 +546,7 @@ public class CookieRun extends JFrame {
 								break;
 							}
 							/// 더블점프 추가한부분 끝
-							System.out.println(jumpY);
-							System.out.println(foot);
+							
 							try {
 								Thread.sleep(10);
 							} catch (InterruptedException e) {
@@ -529,7 +562,7 @@ public class CookieRun extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new CookieRun();
+		new CookieRunOrigin();
 	}
 
 }
