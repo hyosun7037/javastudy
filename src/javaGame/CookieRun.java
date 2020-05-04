@@ -113,7 +113,11 @@ public class CookieRun extends JFrame {
 	// 더블점프 후 떨어지는 이미지
 	ImageIcon cookieDoubleJumpEnd = new ImageIcon("img/player_jumpend.png");
 	Image je = cookieDoubleJumpEnd.getImage();
-
+	
+	// 공격받은 캐릭터 이미지
+	ImageIcon cookieAttack = new ImageIcon("img/player_attack.png");
+	Image ca = cookieAttack.getImage();
+		
 	// 아이템 이미지
 	ImageIcon item = new ImageIcon("img/item.gif");
 	Image item_i = item.getImage();
@@ -125,6 +129,8 @@ public class CookieRun extends JFrame {
 	// 반짝이는 이미지
 	ImageIcon effect = new ImageIcon("img/tw2.png");
 	Image ef = effect.getImage();
+	
+	
 
 	// 더블 버퍼 선언 (전역에 추가)
 	Image buffImage;
@@ -435,6 +441,8 @@ public class CookieRun extends JFrame {
 				buffg.drawImage(tempFoot.getImage(), tempFoot.getX(), tempFoot.getY(), tempFoot.getWidth(), tempFoot.getHeight(), null);
 			}
 			
+			
+			
 			////////////////// 캐릭터가 아이템을 먹으면 바뀌게 하기 //////////////////
 			for (int i = 0; i < jellyList.size(); i++) {
 				Jelly tempJelly = jellyList.get(i);
@@ -451,11 +459,35 @@ public class CookieRun extends JFrame {
 					}
 				}
 				
-				buffg.drawImage(tempJelly.getImage(), tempJelly.getX(), tempJelly.getY(), tempJelly.getWidth(), tempJelly.getHeight(), null);
-				
+				buffg.drawImage(tempJelly.getImage(), tempJelly.getX(), tempJelly.getY(), tempJelly.getWidth(), tempJelly.getHeight(), null);	
 			}
+			
+			
+			
+			/////////////////// 캐릭터가 장애물에 부딪히면 캐릭터 상태가 무적으로 변경 /////////////////////////
 			for (int i = 0; i < attackList.size(); i++) {
 				Attack tempAttack = attackList.get(i);
+				
+				
+				if(tempAttack.getY() > imgY + 200 && tempAttack.getY() < imgY + cookieHeight
+				&& tempAttack.getX() > 160 && tempAttack.getX() < 240) {
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							 
+							try {
+								c = cookieAttack.getImage();
+								Thread.sleep(3000);
+								c = cookie.getImage();
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}).start();
+				}
+				
+				
 				buffg.drawImage(tempAttack.getImage(), tempAttack.getX(), tempAttack.getY(), tempAttack.getWidth(), tempAttack.getHeight(), null);
 			}
 			
@@ -520,6 +552,7 @@ public class CookieRun extends JFrame {
 								e.printStackTrace();
 							}
 						}
+						
 						if(nowJump == doubleJump) { // 점프가 진짜 끝났을 때를 확인
 							jump = false;
 						}
