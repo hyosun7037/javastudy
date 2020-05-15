@@ -1,10 +1,15 @@
 package LoginTest.gui;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import LoginTest.TestDB;
+
 import javax.swing.JButton;
 
 public class Login {
@@ -14,6 +19,10 @@ public class Login {
 	private JTextField PwdTf;
 	private JButton LoginBtn;
 	private JButton SignInBtn;
+	
+	public JFrame getFrame() {
+		return frame;
+	}
 	/**
 	 * Launch the application.
 	 */
@@ -43,7 +52,7 @@ public class Login {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("\uC544\uC774\uB514");
@@ -71,6 +80,15 @@ public class Login {
 		
 		// 회원가입 버튼
 		SignInBtn = new JButton("\uD68C\uC6D0\uAC00\uC785");
+		
+		SignInBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new SignIn();
+				frame.dispose();
+			}
+		});
 		SignInBtn.setBounds(233, 177, 97, 23);
 		frame.getContentPane().add(SignInBtn);
 	}

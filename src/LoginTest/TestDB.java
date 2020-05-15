@@ -18,7 +18,7 @@ public class TestDB {
 	
 	
 	// DB에 연결하기
-	void openCon() throws Exception {
+	public void openCon() throws Exception {
 		// 오라클 주소, 아이디 비밀번호
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
 		String userid = "usertable";
@@ -36,15 +36,25 @@ public class TestDB {
 	}
 
 	// DB 연결 끊기
-	void closeCon() throws Exception {
-		con.close();
+	public void closeCon() throws Exception {
+		if(con != null) {
+			con.close();
+		}
+		if(pstmt != null) {
+			pstmt.close();
+		}
+		if(rs != null) {
+			rs.close();
+		}
+		
 		System.out.println("데이터베이스 연결 해제");
 	}
 
 	// 데이터 넣기
-	int insertData(Users user) {
+	public int insertData(Users user) {
 
 		try {
+			openCon();
 			String SQL = "INSERT INTO users(id,password,name,phone) " + "VALUES (?,?,?,?)"; // 값
 			pstmt = con.prepareStatement(SQL);
 			pstmt.setString(1, user.getId());
@@ -53,15 +63,21 @@ public class TestDB {
 			pstmt.setString(4, user.getPhone());
 			int result = pstmt.executeUpdate(); // 결과값 가져오기 (Insert, Delete, Update)
 			return result;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				closeCon();
+			} catch (Exception e) {
+				
+			}
 		}
 
 		return -1; // 오류시 나타나는 결과
 	}
 
 	// 데이터 수정하기
-	int updateData(String password, String name, String phone) {
+	public int updateData(String password, String name, String phone) {
 		try {
 			
 		} catch (Exception e) {
@@ -71,12 +87,12 @@ public class TestDB {
 	}
 	
 	// 데이터 가져오기
-	int selectData() {
+	public int selectData() {
 		return -1;
 	}
 
 	// 데이터 지우기
-	int deleteData(String name){
+	public int deleteData(String name){
 		return -1;
 	}
 

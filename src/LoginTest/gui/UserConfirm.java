@@ -53,6 +53,7 @@ public class UserConfirm {
 		
 		// 회원 정보
 		UserConfirmTf = new JTextField();
+		UserConfirmTf.setHorizontalAlignment(SwingConstants.CENTER);
 		UserConfirmTf.setEditable(false);
 		UserConfirmTf.setBounds(81, 94, 271, 43);
 		frame.getContentPane().add(UserConfirmTf);
