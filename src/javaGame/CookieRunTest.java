@@ -1,12 +1,15 @@
 package javaGame;
 
+////// í¬ê¸° ë§ì¶°ì„œ í•œê±°ë¼ì„œ ë‚˜ì¤‘ì— ì´ë¯¸ì§€ë§Œ ìˆ˜ì •í•˜ë©´ ë¨!
 import java.awt.AlphaComposite;
+import java.awt.Button;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,317 +17,432 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.json.simple.ItemList;
 
-import javaGame.CookieRunOrigin.Up;
-import test.Foot;
-import test.Jelly;
+//êµ¬í˜„ ë‹¨ê³„
+//1. ë§µì„ ë’¤ë¡œ ì´ë™ ì‹œí‚¬ ìˆ˜ ìˆë‹¤. O
+//
+//1-1. ê°™ì€ ë§µì„ ë¬´í•œë°˜ë³µ í•  ìˆ˜ ìˆë‹¤. O
+//
+//2. ë§µê³¼ í•¨ê»˜ ì ¤ë¦¬ë¥¼ ë’¤ë¡œ ì´ë™ ì‹œí‚¬ ìˆ˜ ìˆë‹¤. O
+//
+//3. ìºë¦­í„°ê°€ ì í”„í•˜ê±°ë‚˜ ëˆ„ì„ ìˆ˜ ìˆë‹¤. O
+//
+//4. ìºë¦­í„°ì™€ ì ¤ë¦¬ê°€ ë§Œë‚˜ë©´ ì ¤ë¦¬ê°€ ì‚¬ë¼ì§€ê²Œ í•  ìˆ˜ ìˆë‹¤. O
+//
+//5. ì²´ë ¥ê²Œì´ì§€ë¥¼ ë§Œë“¤ê³ , ê²Œì´ì§€ê°€ 0ì´ ë˜ë©´ ê²Œì„ ì˜¤ë²„ê°€ ë˜ê²Œ í•  ìˆ˜ ìˆë‹¤. 
+//
+//6. ëŒ€ê¸°ì‹¤ í˜ì´ì§€, ìŠ¤í…Œì´ì§€ ì„ íƒ í˜ì´ì§€, ê²°ê³¼í˜ì´ì§€ë¥¼ ë§Œë“¤ ìˆ˜ ìˆë‹¤.
+//
+//7. ê±°ëŒ€í™”ë¥¼ í•  ìˆ˜ ìˆë‹¤.
+//
+//8. ê°€ì†í™”ë¥¼ í•  ìˆ˜ ìˆë‹¤.
+//
+//ì°½ ì‚¬ì´ì¦ˆ 800 *480 / ë°œíŒì‚¬ì´ì¦ˆ 80 / í•œì¹¸ì§œë¦¬ ì¥ì• ë¬¼ 80*80 / ë¶€ë”ªíˆëŠ” ë²”ìœ„ 120*80 / ì ¤ë¦¬ 20*20 ~ 30*30 / ë°œíŒ ì•„ë˜ ê³µê°„ / ìºë¦­í„°ëŠ” ì„¸ë²ˆì§¸ ë°œíŒì— ìœ„ì¹˜
 
-//±¸Çö ´Ü°è
-//1. ¸ÊÀ» µÚ·Î ÀÌµ¿ ½ÃÅ³ ¼ö ÀÖ´Ù. O
-//
-//1-1. °°Àº ¸ÊÀ» ¹«ÇÑ¹İº¹ ÇÒ ¼ö ÀÖ´Ù. O
-//
-//2. ¸Ê°ú ÇÔ²² Á©¸®¸¦ µÚ·Î ÀÌµ¿ ½ÃÅ³ ¼ö ÀÖ´Ù. O
-//
-//3. Ä³¸¯ÅÍ°¡ Á¡ÇÁÇÏ°Å³ª ´©À» ¼ö ÀÖ´Ù. O
-//
-//4. Ä³¸¯ÅÍ¿Í Á©¸®°¡ ¸¸³ª¸é Á©¸®°¡ »ç¶óÁö°Ô ÇÒ ¼ö ÀÖ´Ù. O
-//
-//5. Ã¼·Â°ÔÀÌÁö¸¦ ¸¸µé°í, °ÔÀÌÁö°¡ 0ÀÌ µÇ¸é °ÔÀÓ ¿À¹ö°¡ µÇ°Ô ÇÒ ¼ö ÀÖ´Ù. 
-//
-//6. ´ë±â½Ç ÆäÀÌÁö, ½ºÅ×ÀÌÁö ¼±ÅÃ ÆäÀÌÁö, °á°úÆäÀÌÁö¸¦ ¸¸µé ¼ö ÀÖ´Ù.
-//
-//7. °Å´ëÈ­¸¦ ÇÒ ¼ö ÀÖ´Ù.
-//
-//8. °¡¼ÓÈ­¸¦ ÇÒ ¼ö ÀÖ´Ù.
-//
-//Ã¢ »çÀÌÁî 800 *480 / ¹ßÆÇ»çÀÌÁî 80 / ÇÑÄ­Â¥¸® Àå¾Ö¹° 80*80 / ºÎµúÈ÷´Â ¹üÀ§ 120*80 / Á©¸® 20*20 ~ 30*30 / ¹ßÆÇ ¾Æ·¡ °ø°£ / Ä³¸¯ÅÍ´Â ¼¼¹øÂ° ¹ßÆÇ¿¡ À§Ä¡
+// firstMap ê°€ë¡œ 1200ìœ¼ë¡œ ëŠ˜ë¦¬ê¸° / ë‹¤ ìˆ˜ì •í•˜ê³  íŒŒì¼ì •ë¦¬
 
-/////////////////// ¿À·ù : 1. Á¡ÇÁÇÒ ¶§ ÀüÀÇ ¾ÆÀÌÅÛµéµµ »ç¶óÁü  / 3. ½ºÆäÀÌ½º¹Ù¸¦ ²Ú ´©¸£¸é Á¡ÇÁ X / 3. ´õºíÁ¡ÇÁ½Ã Ä³¸¯ÅÍ »ç¶óÁü  //////////
+//í”„ë ˆì„, íŒ¨ë„, ë©”ì¸ í•œ ê³µê°„
 
-//ÇÁ·¹ÀÓ, ÆĞ³Î, ¸ŞÀÎ ÇÑ °ø°£
+
+
+//ë§µ ê°ì²´ë³„ ìƒ‰ê¹”
+//
+//ê¸°ë³¸ì ¤ë¦¬ 255, 255, 0  //  16776960
+//ë…¸ë‘ì ¤ë¦¬ 200, 200, 0  //  13158400
+//ë¶„í™ì ¤ë¦¬ 150, 150, 0  //  9868800
+//
+//í”¼ë¬¼ì•½  255, 100, 0  //  16737280
+//
+//1ë‹¨ì¥ì• ë¬¼ 255, 0, 0   //  16711680
+//2ë‹¨ì¥ì• ë¬¼ 255, 0, 150  //  16711830
+//3ë‹¨ì¥ì• ë¬¼ 255, 0, 255  //  16711935 
+
 
 public class CookieRunTest extends JFrame {
 
-	//// º¯¼ö ////
-	MousePanel panel;
+	MyPanel panel;
 
-	int imgX = 0;
-	int imgY = 5; // ¿ø·¡ 40
-
-	int imgBgX = 0;
-	int imgBgY = 0;
-
-	int time = 60;
-	int fieldY = 0;
-
-	int itemX = 50;
-	int itemY = 50;
-
-	int count = 0; // ¹ßÆÇ È®ÀÎ º¯¼ö
-	int field = 300; // ¹ßÆÇ³ôÀÌ
-
-	int nowField = field; // Ä³¸¯ÅÍ ³ôÀÌ¿¡ µû¸¥ ¹ßÆÇ À§Ä¡ Á¶Á¤ º¯¼ö
-
-	boolean fall = false; // ÇöÀç ¶³¾îÁö´ÂÁö È®ÀÎ
-	boolean jump = false; // ÇöÀç Á¡ÇÁÁßÀÎÁö È®ÀÎ
-
-	int doubleJump = 0; // Á¡ÇÁ Ä«¿îÆ® (2°¡ µÇ¸é ´õºíÁ¡ÇÁ »óÅÂ)
-
-	boolean downKeyOn = false; // ´Ù¿îÅ° ±âº» ¼³Á¤
-
-//	private AlphaComposite alphaComposite; // Åõ¸íµµ Á¶ÀıÀ» À§ÇÑ º¯¼ö
-
-	/////////////////////// ÀÌ¹ÌÁö ////////////////////////////////////
-
-	// ¹ßÆÇ ÀÌ¹ÌÁö
-	ImageIcon landIc = new ImageIcon("img/footTest.png");
-	Image landimg = landIc.getImage();
-
-	// bg ¿òÁ÷ÀÌ´Â ÀÌ¹ÌÁö (°è¼Ó ¹İº¹)
-	ImageIcon bg = new ImageIcon("img/bg1.png");
-	Image b = bg.getImage();
-
-	// bg °íÁ¤ÀÌ¹ÌÁö
-	ImageIcon bg2 = new ImageIcon("img/bg2.png");
-	Image bgTwo = bg2.getImage();
-
-	int b1 = 0;
-	int b2 = b.getWidth(null); // µû¶ó¿À´Â ÀÌ¹ÌÁö
-
-	// ¿øº» Ä³¸¯ÅÍ ÀÌ¹ÌÁö
-	ImageIcon cookie = new ImageIcon("img/cookieTest.png");
-	Image c = cookie.getImage();
-	int cookieHeight = cookie.getImage().getHeight(null);
-
-	// ´Ù¿î ÀÌ¹ÌÁö (½½¶óÀÌµù)
-	ImageIcon cookieDown = new ImageIcon("img/slideTest.png");
-	Image down = cookieDown.getImage();
-
-	// Á¡ÇÁ ÀÌ¹ÌÁö
-	ImageIcon cookieJump = new ImageIcon("img/jumpTest.png");
-	Image cj = cookieJump.getImage();
-
-	// ´õºíÁ¡ÇÁ ÀÌ¹ÌÁö
-	ImageIcon cookieDoubleJump = new ImageIcon("img/doubleJumpTest.png");
-	Image dj = cookieDoubleJump.getImage();
-
-	// ´õºíÁ¡ÇÁ ÈÄ ¶³¾îÁö´Â ÀÌ¹ÌÁö
-	ImageIcon cookieDoubleJumpEnd = new ImageIcon("img/fallTest.png");
-	Image je = cookieDoubleJumpEnd.getImage();
+	private int runPage = 0; // í•œ í™”ë©´ ì´ë™ì‹œ ì²´ë ¥ ê¹ê¸° ìœ„í•œ ë³€ìˆ˜
 	
-	// °ø°İ¹ŞÀº Ä³¸¯ÅÍ ÀÌ¹ÌÁö
-	ImageIcon cookieAttack = new ImageIcon("img/hitTest.png");
-	Image ca = cookieAttack.getImage();
-		
-	// ¾ÆÀÌÅÛ ÀÌ¹ÌÁö
-	ImageIcon item = new ImageIcon("img/jellyTest.png");
-	Image item_i = item.getImage();
-
-	// Àå¾Ö¹° ÀÌ¹ÌÁö
-	ImageIcon attack = new ImageIcon("img/tacleTest1.png");
-	Image at = attack.getImage();
-
-	// ¹İÂ¦ÀÌ´Â ÀÌ¹ÌÁö
-	ImageIcon effect = new ImageIcon("img/tw2.png");
-	Image ef = effect.getImage();
+	private int runStage = 1; // ìŠ¤í…Œì´ì§€ í™•ì¸ ë³€ìˆ˜
 	
+	private int nowField = 2000; // ìºë¦­í„° ë†’ì´ì— ë”°ë¥¸ ë°œíŒ ìœ„ì¹˜ ì¡°ì • ë³€ìˆ˜
+
+	private boolean fall = false; // í˜„ì¬ ë–¨ì–´ì§€ëŠ”ì§€ í™•ì¸
+	
+	private boolean jump = false; // í˜„ì¬ ì í”„ì¤‘ì¸ì§€ í™•ì¸
+ 
+	private int resultScore = 0; // ê²Œì„ ìŠ¤ì½”ì–´
+
+	private int gameSpeed = 3; // ê²Œì„ ì†ë„
+
+	private boolean escKeyOn = false; // ì¼ì‹œì •ì§€ í™•ì¸
+	
+	private boolean downKeyOn = false; // ë‹¤ìš´í‚¤ ê¸°ë³¸ ì„¤ì •
+	
+	private boolean invincible = false; // ë¬´ì ìƒíƒœ ë³€ìˆ˜
+
+	int doubleJump = 0; // ì í”„ ì¹´ìš´íŠ¸ (2ê°€ ë˜ë©´ ë”ë¸”ì í”„ ìƒíƒœ)
+
+	int cookieAlpha = 255; // íˆ¬ëª…ë„
+	
+	int face; // ì¿ í‚¤ ì •ë©´
+	
+	int foot; // ì¿ í‚¤ ë°œ
 	
 
-	// ´õºí ¹öÆÛ ¼±¾ğ (Àü¿ª¿¡ Ãß°¡)
+	
+	/* ê²Œì„ì— êµ¬í˜„í•  ì´ë¯¸ì§€ë“¤ì„ ê·¸ë ¤ì¤€ë‹¤. */
+	
+	// ë°œíŒ ì´ë¯¸ì§€
+	private ImageIcon fieldIc1 = new ImageIcon("img/footTest.png"); // 1ë‹¨ë°œíŒ
+	private ImageIcon fieldIc2 = new ImageIcon("img/footTest2.png"); // 2ë‹¨ë°œíŒ
+
+	// ë°°ê²½ ì´ë¯¸ì§€
+	private ImageIcon bg1 = new ImageIcon("img/bg1.png");
+	private ImageIcon bg2 = new ImageIcon("img/bg2.png");
+
+	// ì¿ í‚¤ ìºë¦­í„° ì´ë¯¸ì§€
+	private ImageIcon cookie = new ImageIcon("img/cookieTest.png"); // ê¸°ë³¸
+	private ImageIcon cookieDown = new ImageIcon("img/slideTest.png"); // ìŠ¬ë¼ì´ë”©
+	private ImageIcon cookieJump = new ImageIcon("img/jumpTest.png"); // ì í”„
+	private ImageIcon cookieDJump = new ImageIcon("img/doubleJumpTest.png"); // ë”ë¸”ì í”„
+	private ImageIcon cookieFall = new ImageIcon("img/fallTest.png"); // ë‚™í•˜
+	private ImageIcon cookieHit = new ImageIcon("img/hitTest.png"); // ê³µê²©ë°›ì•˜ì„ ë•Œ
+
+	int cookieHeight = cookie.getImage().getHeight(null); // ìºë¦­í„° ë†’ì´
+
+	// ì ¤ë¦¬ ì´ë¯¸ì§€, ì´í™íŠ¸ ì´ë¯¸ì§€
+	private ImageIcon jelly = new ImageIcon("img/jellyTest.png"); // ì ¤ë¦¬
+	private ImageIcon effect = new ImageIcon("img/tw2.png");
+
+	// ì¥ì• ë¬¼ ì´ë¯¸ì§€
+	private ImageIcon tacle = new ImageIcon("img/tacleTest1.png"); // ì¥ì• ë¬¼ (ì¶”í›„ ì¶”ê°€ì˜ˆì •)
+
+	
+	
+	/* ì ¤ë¦¬, ë°œíŒ, ì¥ì• ë¬¼ ë¦¬ìŠ¤íŠ¸ ë°°ì¹˜  */
+	
+	// ì ¤ë¦¬ ë‹´ì„ ë¦¬ìŠ¤íŠ¸
+	private List<Jelly> jellyList = new ArrayList<>();
+
+	// ë°œíŒ ê°ì²´ë¥¼ ë‹´ì„ ë¦¬ìŠ¤íŠ¸
+	private List<Field> fieldList = new ArrayList<>();
+
+	// ì¥ì• ë¬¼ ë¦¬ìŠ¤íŠ¸
+	private List<Tacle> tacleList = new ArrayList<>();
+
+	
+	
+	/* í”„ë ˆì„, íŒ¨ë„, ë²„íŠ¼ ë“±ì€ ì „ì—­ê³µê°„ì— ë°°ì¹˜ : í´ë˜ìŠ¤ ë‚´ ë‹¤ë¥¸ ê°ì²´ ë° ë©”ì„œë“œë“¤ì´ ì´ìš©í•˜ê¸° ìœ„í•¨ */
+
+	int[][] colorArr; // ì´ë¯¸ì§€ì˜ x,yì¢Œí‘œì˜ ìƒ‰ê°’ì„ ì €ì¥í•˜ëŠ” 2ì°¨ì›ë°°ì—´ colorArr[0][0]ì„ í˜¸ì¶œí•˜ë©´ 16777215
+	int[] sizeArr; // ì´ë¯¸ì§€ì˜ ë„“ì´ì™€ ë†’ì´ë¥¼ ê°€ì ¸ì˜¤ëŠ” 1ì°¨ì› ë°°ì—´
+
+	
+	
+	/*PaintComponent ê´€ë ¨ */
+	
+	// ë”ë¸” ë²„í¼ ì„ ì–¸ (ì „ì—­ì— ì¶”ê°€)
 	Image buffImage;
 	Graphics buffg;
-
-	// ÇöÀç½Ã°£ °¡Á®¿À±â
-	static long getTime() {
-		return Timestamp.valueOf(LocalDateTime.now()).getTime();
-	}
-
-	// substringÀ¸·Î ¹ßÆÇ Á¤º¸ °Ë»ö
-	static int getGround(String ground, int index) {
-		return Integer.parseInt(ground.substring(index, index + 1));
-	}
-
-	// Á©¸® ´ãÀ» ¸®½ºÆ®
-	List<Jelly> jellyList = new ArrayList<>();
-
-	// ¹ßÆÇ °´Ã¼¸¦ ´ãÀ» ¸®½ºÆ®
-	List<Foot> fieldList = new ArrayList<>();
-
-	// Àå¾Ö¹° ¸®½ºÆ®
-	List<Attack> attackList = new ArrayList<>();
-
-	int[][] colorArr; // ÀÌ¹ÌÁöÀÇ x,yÁÂÇ¥ÀÇ »ö°ªÀ» ÀúÀåÇÏ´Â 2Â÷¿ø¹è¿­ colorArr[0][0]À» È£ÃâÇÏ¸é 16777215
-	int[] sizeArr; // ÀÌ¹ÌÁöÀÇ ³ĞÀÌ¿Í ³ôÀÌ¸¦ °¡Á®¿À´Â 1Â÷¿ø ¹è¿­ temp
-
-	//// »ı¼ºÀÚ////
+	private AlphaComposite alphaComposite; // íˆ¬ëª…ë„ ì¡°ì ˆì„ ìœ„í•œ ë³€ìˆ˜
+	
+	
+	
+	/*ê¸°íƒ€ ë ˆí¼ëŸ°ìŠ¤*/
+	
+	Cookie c1; // ì¿ í‚¤ (ë³€ìˆ˜ë¥¼ ì „ì—­ìœ¼ë¡œ Â•å¼§)
+	Back b11; // ë°°ê²½ 1-1
+	Back b12; // ë°°ê²½ 1-2
+	Button escBtn; //esc ë²„íŠ¼
+	
+	
+	/* ìƒì„±ì */
+	
 	public CookieRunTest() {
-		panel = new MousePanel();
+		panel = new MyPanel();
 		setTitle("Cookie Run : Stage1");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setContentPane(panel); // MousePanel ºÙÀÌ±â
-		setSize(800, 480); // ¹è°æ2¹ø Å©±â Á¶Á¤
-		setVisible(true); // º¸ÀÌ°Ô ÇÏ±â
-//		setResizable(false); // Å©±âÁ¶Á¤ºÒ°¡
+		setContentPane(panel); // MyPanel ë¶™ì´ê¸°
+		setSize(800, 480); // ì°½ í¬ê¸°
+		setVisible(true); // ë³´ì´ê²Œ í•˜ê¸°
+		
+		
+		/*esc ë²„íŠ¼ ê´€ë ¨*/
+		
+		escBtn = new Button("Restart");
+		escBtn.setBounds(350, 240, 100, 30);
+		escBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panel.remove(escBtn);
+				escKeyOn = false;
+			}
+		});
 	}
 
-	class MousePanel extends JPanel {
-		public MousePanel() {
-			setFocusable(true);			
+	class MyPanel extends JPanel {
+		public MyPanel() {
 			
-			////////// ÀÌ¹ÌÁö¸Ê ±¸Çö ///////////
+			setFocusable(true); // í‚¤ ì…ë ¥ ìš°ì„ ê¶Œ
+
+			// ì¿ í‚¤ ì¸ìŠ¤í„´ìŠ¤ ìƒì„± / ê¸°ë³¸ìë£ŒëŠ” í´ë˜ìŠ¤ ì•ˆì— ë‚´ì¥, ì´ë¯¸ì§€ ì¶”ê°€
+			c1 = new Cookie(cookie.getImage());
+
+			// ì¿ í‚¤ ì •ë©´ = ì¿ í‚¤ Xê°’ + ë†’ì´
+			face = c1.getX() + c1.getWidth();
+
+			// ì¿ í‚¤ ë°œ ë°‘ ìœ„ì¹˜ = ì¿ í‚¤ Yê°’ + ë†’ì´
+			foot = c1.getY() + c1.getHealth();
+			
+			// ë°°ê²½ 1-1 (xì¢Œí‘œ ê°’ : 0)
+			b11 = new Back(
+					bg1.getImage(), 
+					0, 
+					0, // yê°’ ìˆ˜ì •í•„ìš”
+					bg1.getImage().getWidth(null),
+					bg1.getImage().getHeight(null));
+
+			// ë°°ê²½ 1-2 (xì¢Œí‘œ ê°’ : bg1ë¶€í„° ì‹œì‘)
+			b12 = new Back(
+					bg1.getImage(), 
+					bg1.getImage().getWidth(null), 
+					0, // yê°’ ìˆ˜ì •í•„ìš”
+					bg1.getImage().getWidth(null), 
+					bg1.getImage().getHeight(null));
+
+			
+			/* Util Class ì•ˆì˜ getSizeì™€ getPicë©”ì„œë“œ ì´ìš©, ì‚¬ì´ì¦ˆì™€ ì»¬ëŸ¬ë¥¼ ê°€ì§€ê³ ì˜´ */
+
 			try {
-				sizeArr = Bf2.getSize("img/firstMap.png");
-				colorArr = Bf2.getPic("img/firstMap.png");
+				sizeArr = Util.getSize("img/firstMap.png"); // ë§µ ì‚¬ì´ì¦ˆ
+				colorArr = Util.getPic("img/firstMap.png"); // ë§µ ìƒ‰ìƒê°’
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+
+			int maxX = sizeArr[0]; // ë§µì˜ ë„“ì´
+			int maxY = sizeArr[1]; // ë§µì˜ ë†’ì´
+
 			
-			int maxX = sizeArr[0];
-			int maxY = sizeArr[1];
+
+			/* ë°œíŒ ê°ì²´ ë¦¬ìŠ¤íŠ¸ ìƒì„± */
 			
-			
-			/////////// ÆĞ³Î¿¡¼­ ÀÌ¹ÌÁö ºÒ·¯¿À±â ///////////
-			for (int i = 0; i < maxX; i+=2) { // ¹ßÆÇÀº 4Ä­À» Â÷ÁöÇÏ´Â °ø°£, 2,2»çÀÌÁî·Î ¹İº¹¹®
-				for (int j = 0; j < maxY; j+=2) { // »ö °ªÀÌ 0ÀÏ °æ¿ì (°ËÀº»ö)
-					if(colorArr[i][j] == 0) {
-						fieldList.add(new Foot(landimg, i*40, j*40, 80, 80)); // ÁÂÇ¥¿¡ 40À» °öÇÏ°í, ³ĞÀÌ¿Í ³ôÀÌ´Â 80
+			// 1ë‹¨ ë°œíŒ ê²€ì€ìƒ‰ : 0
+			for (int i = 0; i < maxX; i += 2) { // ë°œíŒì€ 4ì¹¸ì„ ì°¨ì§€í•˜ëŠ” ê³µê°„, 2,2ì‚¬ì´ì¦ˆë¡œ ë°˜ë³µë¬¸
+				for (int j = 0; j < maxY; j += 2) { // ìƒ‰ ê°’ì´ 0ì¼ ê²½ìš° (ê²€ì€ìƒ‰)
+					if (colorArr[i][j] == 0) {
+						fieldList.add(new Field(fieldIc1.getImage(), i * 40, j * 40, 80, 80)); // ì¢Œí‘œì— 40ì„ ê³±í•˜ê³ , ë„“ì´ì™€ ë†’ì´ëŠ” 80
+																								
 					}
 				}
 			}
 			
-			for (int i = 0; i < maxX; i+=1) { // Á©¸®´Â 1Ä­À» Â÷Áö, 1,1»çÀÌÁî·Î ¹İº¹¹®
-				for (int j = 0; j < maxY; j+=1) {
-					if(colorArr[i][j] == 16773632) { // »ö °ªÀÌ 16773632ÀÏ °æ¿ì (³ë¶õ»ö)
-						jellyList.add(new Jelly(item.getImage(), i*40, j*40, 30, 30, 255)); // ÁÂÇ¥¿¡ 40°öÇÏ°í, ³ĞÀÌ¿Í ³ôÀÌ´Â 30À¸·Î ÇÑ´Ù.
+			// 2ë‹¨ ë°œíŒ íšŒìƒ‰ : 6579300 (ì¶”í›„ì— ì¶”ê°€í•˜ê¸°)
+			for (int i = 0; i < maxX; i += 2) { // ë°œíŒì€ 4ì¹¸ì„ ì°¨ì§€í•˜ëŠ” ê³µê°„, 2,2ì‚¬ì´ì¦ˆë¡œ ë°˜ë³µë¬¸
+				for (int j = 0; j < maxY; j += 2) { // ìƒ‰ ê°’ì´ 0ì¼ ê²½ìš° (ê²€ì€ìƒ‰)
+					if (colorArr[i][j] == 6579300) {
+						fieldList.add(new Field(fieldIc2.getImage(), i * 40, j * 40, 80, 80)); // ì¢Œí‘œì— 40ì„ ê³±í•˜ê³ , ë„“ì´ì™€ ë†’ì´ëŠ” 80
+																								
 					}
-				}				
+				}
 			}
-			
-			
-			for (int i = 0; i < maxX; i+=2) { // 
-				for (int j = 0; j < maxY; j+=2) {
-					if(colorArr[i][j] == 16711680) { // »ö °ªÀÌ 16711680ÀÏ °æ¿ì (»¡°£»ö)
-						attackList.add(new Attack(attack.getImage(), i*40, j*40, 80, 80, 255)); // ÁÂÇ¥¿¡ 40°öÇÏ°í, ³ĞÀÌ¿Í ³ôÀÌ´Â 30À¸·Î ÇÑ´Ù.
-					}
-				}				
-			}
-			
-			
-			///////////////// ¹ßÆÇ ÁÂÇ¥ ÀÌµ¿ ¾²·¹µå ////////////////////
-						new Thread(new Runnable() {
 
-							@Override
-							public void run() {
-								while (true) {
-									for (int i = 0; i < fieldList.size(); i++) {
-										fieldList.get(i).setX(fieldList.get(i).getX() - 4);
-									} // ¹ßÆÇ
-									
-									for(int i = 0; i < jellyList.size(); i++) {
-										jellyList.get(i).setX(jellyList.get(i).getX() -4);
-									} // Á©¸®
-									
-									for(int i = 0; i < attackList.size(); i++) {
-										attackList.get(i).setX(attackList.get(i).getX() -4);
-									} // Àå¾Ö¹°
-									
-									
-									List<Integer> countList = new ArrayList<>(); // ¾²·¹µå ¾È¿¡ ÀÓ½ÃÀûÀ¸·Î ¼±¾ğ
-									
-									int tempField; // ¹ßÆÇ À§Ä¡¸¦ °è¼Ó ½ºÄµÇÏ´Â º¯¼ö
-									int tempNowField = 2000; // snowField¸¦ ¼¼ÆÃ
-									
-									for (int i = 0; i < fieldList.size(); i++) {
-										int tempX = fieldList.get(i).getX(); // ¹ßÆÇÀÇ X°ª
-										
-										if(tempX >= 0 && tempX < 80) { // ¹ßÆÇÀÌ Ä³¸¯¹üÀ§¾È
-											tempField = fieldList.get(i).getY(); // ¹ßÆÇÀÇ y°ª
-											
-//											System.out.println(imgY + cookieHeight + "  " + tempField);
-											
-											//¹ßÆÇÀ§Ä¡°¡ tempNowFieldº¸´Ù ÀÛ°í, ¹ß¹Ù´ÚÀÇ À§Ä¡°¡ tempFieldº¸´Ù À§¿¡ ÀÖ´Ù¸é
-											if(tempField < tempNowField && imgY + cookieHeight <= tempField) {
-												tempNowField = tempField;
-											}
-										}
-									}
-									nowField = tempNowField; // °á°ú¸¦ nowField¿¡ ¾÷µ¥ÀÌÆ®
-									
-									try {
-										Thread.sleep(10);
-									} catch (InterruptedException e) {
-										e.printStackTrace();
-									}
+			
+			
+			/* ì ¤ë¦¬ ê°ì²´ ë¦¬ìŠ¤íŠ¸ ìƒì„± */
+			
+			// ê¸°ë³¸ì ¤ë¦¬ 255, 255, 0 : 16776960
+			for (int i = 0; i < maxX; i += 1) { // ì ¤ë¦¬ëŠ” 1ì¹¸ì„ ì°¨ì§€, 1,1ì‚¬ì´ì¦ˆë¡œ ë°˜ë³µë¬¸
+				for (int j = 0; j < maxY; j += 1) {
+					if (colorArr[i][j] == 16776960) { 
+						jellyList.add(new Jelly(jelly.getImage(), i * 40, j*40, 30, 30, 1000)); // ì¢Œí‘œì— 40ê³±í•˜ê³ , ë„“ì´ì™€ ë†’ì´ëŠ” 30
+					}
+				}
+			}
+			
+			// ë…¸ë‘ì ¤ë¦¬ 200, 200, 0 : 13158400
+			for (int i = 0; i < maxX; i += 1) { // ì ¤ë¦¬ëŠ” 1ì¹¸ì„ ì°¨ì§€, 1,1ì‚¬ì´ì¦ˆë¡œ ë°˜ë³µë¬¸
+				for (int j = 0; j < maxY; j += 1) {
+					if (colorArr[i][j] == 13158400) { 
+						jellyList.add(new Jelly(jelly.getImage(), i * 40, j*40, 30, 30, 2000)); // ì¢Œí‘œì— 40ê³±í•˜ê³ , ë„“ì´ì™€ ë†’ì´ëŠ” 30
+					}
+				}
+			}
+
+			// ë¶„í™ì ¤ë¦¬ 150, 150, 0 : 9868800
+			for (int i = 0; i < maxX; i += 1) { // ì ¤ë¦¬ëŠ” 1ì¹¸ì„ ì°¨ì§€, 1,1ì‚¬ì´ì¦ˆë¡œ ë°˜ë³µë¬¸
+				for (int j = 0; j < maxY; j += 1) {
+					if (colorArr[i][j] == 9868800) { 
+						jellyList.add(new Jelly(jelly.getImage(), i * 40, j*40, 30, 30, 3000)); // ì¢Œí‘œì— 40ê³±í•˜ê³ , ë„“ì´ì™€ ë†’ì´ëŠ” 30
+					}
+				}
+			}
+			
+			
+			
+			/* ë¬¼ì•½ ê°ì²´ ë¦¬ìŠ¤íŠ¸ ìƒì„± */
+			
+			//í”¼ë¬¼ì•½  255, 100, 0  //  16737280
+			for (int i = 0; i < maxX; i += 1) { // ì ¤ë¦¬ëŠ” 1ì¹¸ì„ ì°¨ì§€, 1,1ì‚¬ì´ì¦ˆë¡œ ë°˜ë³µë¬¸
+				for (int j = 0; j < maxY; j += 1) {
+					if (colorArr[i][j] == 16737280) { 
+						jellyList.add(new Jelly(jelly.getImage(), i * 40, j*40, 30, 30, 10000)); // ì¢Œí‘œì— 40ê³±í•˜ê³ , ë„“ì´ì™€ ë†’ì´ëŠ” 30
+					}
+				}
+			}
+			
+			
+			
+			/* ì¥ì• ë¬¼ ê°ì²´ ë¦¬ìŠ¤íŠ¸ ìƒì„±  */
+			
+			//1ë‹¨ì¥ì• ë¬¼ 255, 0, 0   //  16711680
+			for (int i = 0; i < maxX; i += 2) {
+				for (int j = 0; j < maxY; j += 2) {
+					if (colorArr[i][j] == 16711680) { // ìƒ‰ ê°’ì´ 16711680ì¼ ê²½ìš° (ë¹¨ê°„ìƒ‰)
+						tacleList.add(new Tacle(tacle.getImage(), i * 40, j * 40, 80, 80, 0));  // ì¢Œí‘œì— 40ì„ ê³±í•˜ê³ , ë„“ì´ì™€ ë†’ì´ëŠ” 80
+					}
+				}
+			}
+			
+			//2ë‹¨ì¥ì• ë¬¼ 255, 0, 150  //  16711830
+			for (int i = 0; i < maxX; i += 2) {
+				for (int j = 0; j < maxY; j += 2) {
+					if (colorArr[i][j] == 16711830) { // ìƒ‰ ê°’ì´ 16711680ì¼ ê²½ìš° (ë¹¨ê°„ìƒ‰)
+						tacleList.add(new Tacle(tacle.getImage(), i * 40, j * 40, 80, 80, 0));  // ì¢Œí‘œì— 40ì„ ê³±í•˜ê³ , ë„“ì´ì™€ ë†’ì´ëŠ” 80
+					}
+				}
+			}
+			
+			//3ë‹¨ì¥ì• ë¬¼ 255, 0, 255  //  16711935
+			for (int i = 0; i < maxX; i += 2) {
+				for (int j = 0; j < maxY; j += 2) {
+					if (colorArr[i][j] == 16711935) { // ìƒ‰ ê°’ì´ 16711680ì¼ ê²½ìš° (ë¹¨ê°„ìƒ‰)
+						tacleList.add(new Tacle(tacle.getImage(), i * 40, j * 40, 80, 80, 0));  // ì¢Œí‘œì— 40ì„ ê³±í•˜ê³ , ë„“ì´ì™€ ë†’ì´ëŠ” 80
+					}
+				}
+			}
+			
+
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					while (true) {
+
+						int tempField; // ë°œíŒ ìœ„ì¹˜ë¥¼ ê³„ì† ìŠ¤ìº”í•˜ëŠ” ë³€ìˆ˜
+						int tempNowField;// snowFieldë¥¼ ì„¸íŒ…
+
+						//// ë¬´ì í™” ì¡°ê±´ë¬¸
+						if (c1.isInvincible()) {
+							tempNowField = 400;
+						} else {
+							tempNowField = 2000;
+						}
+
+						for (int i = 0; i < fieldList.size(); i++) {
+							int tempX = fieldList.get(i).getX(); // ë°œíŒì˜ Xê°’
+
+							if (tempX > c1.getX()-60 && tempX <= face) { // ë°œíŒì´ ìºë¦­ë²”ìœ„ì•ˆ
+
+								tempField = fieldList.get(i).getY(); // ë°œíŒì˜ yê°’
+
+								foot = c1.getY() + c1.getHeight(); // ìºë¦­í„° ë°œ ìœ„ì¹˜ ìŠ¤ìº”
+
+								// ë°œíŒìœ„ì¹˜ê°€ tempNowFieldë³´ë‹¤ ì‘ê³ , ë°œë°”ë‹¥ì˜ ìœ„ì¹˜ê°€ tempFieldë³´ë‹¤ ìœ„ì— ìˆë‹¤ë©´
+								if (tempField < tempNowField && tempField >= foot) {
+
+									tempNowField = tempField;
 								}
 							}
-						}).start();
-						
-						
-						
-			////////////////// ³«ÇÏ ½º·¹µå /////////////////////////
+						}
+						nowField = tempNowField; // ê²°ê³¼ë¥¼ nowFieldì— ì—…ë°ì´íŠ¸
+
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}).start();
+
+			/* ë‚™í•˜ìŠ¤ë ˆë“œ */
 			new Thread(new Runnable() {
 
 				public void run() {
 					while (true) {
-						// ¹ß¹Ù´Ú À§Ä¡´Â ÀÌ¹ÌÁöÀÇ YÀ§Ä¡ + ÀÌ¹ÌÁöÀÇ ³ôÀÌ
-						int foot = imgY + cookieHeight;
-						
-						// ¹ß¹Ù´ÚÀÌ ¶¥º¸´Ù À§¿¡ ÀÖÀ¸¸é ÀÛµ¿
-						if (foot < nowField && !jump && !fall)  { // Á¡ÇÁÁß X, °øÁß¿¡ ÀÖ°í, ¶³¾îÁö´Â ÁßÀÌ ¾Æ´Ò ¶§ ÀÛµ¿
-							fall = true; // ¶³¾îÁö´Â ÁßÀ¸·Î ÀüÈ¯
-							System.out.println("³«ÇÏ½ÃÀÛ");
-							
-							long t1 = getTime(); // ÇöÀç½Ã°£À» °¡Á®¿Â´Ù
-							long t2;
-							int set = 1; // Ã³À½ ³«ÇÏ¶û (0~10)±îÁö Å×½ºÆ®
-							
-							//////´õºí Á¡ÇÁ Ãß°¡½ÃÀÛ
-							 if(doubleJump == 2) { 
-								 c = cookieDoubleJumpEnd.getImage();
-							 }
-							 ////´õºíÁ¡ÇÁ Ãß°¡ ³¡
-							 
-							while (foot < nowField) { // ¹ßÀÌ ¶¥¿¡ ´ê±â Àü±îÁö ¹İº¹
-								t2 = getTime() - t1; // Áö±İ ½Ã°£¿¡¼­ t1À» »«´Ù
-								int fallY = set + (int) ((t2) / 40); // ³«ÇÏ·®À» ´Ã¸°´Ù.
+						// ë°œë°”ë‹¥ ìœ„ì¹˜ëŠ” ì´ë¯¸ì§€ì˜ Yìœ„ì¹˜ + ì´ë¯¸ì§€ì˜ ë†’ì´
+						foot = c1.getY() + c1.getHeight(); // ìºë¦­í„° ë°œ ìœ„ì¹˜ ì¬ìŠ¤ìº”
 
-								if(foot + fallY > nowField) {
+						// ë°œë°”ë‹¥ì´ ë•…ë³´ë‹¤ ìœ„ì— ìˆìœ¼ë©´ ì‘ë™
+						if (
+							!escKeyOn // ì¼ì‹œì¤‘ì§€ê°€ ë°œë™ X
+							&& foot < nowField // ê³µì¤‘ì—
+							&& !c1.isJump()  // ì í”„ X
+							&& !c1.isFall()) { // ì í”„ì¤‘ X, ê³µì¤‘ì— ìˆê³ , ë–¨ì–´ì§€ëŠ” ì¤‘ì´ ì•„ë‹ ë•Œ ì‘ë™
+
+							c1.setFall(true);// ë–¨ì–´ì§€ëŠ” ì¤‘ìœ¼ë¡œ ì „í™˜
+							System.out.println("ë‚™í•˜");
+
+							if (c1.getCountJump() == 2) { // ë”ë¸”ì í”„ X, ë‚™í•˜ ì´ë¯¸ì§€ë¡œ ë³€ê²½
+								c1.setImage(cookieFall.getImage());
+							}
+
+							long t1 = Util.getTime(); // í˜„ì¬ì‹œê°„ì„ ê°€ì ¸ì˜¨ë‹¤
+							long t2;
+							int set = 2; // ì²˜ìŒ ë‚™í•˜ë‘ (0~10)ê¹Œì§€ í…ŒìŠ¤íŠ¸
+
+							while (foot < nowField) { // ë°œì´ ë•…ì— ë‹¿ê¸° ì „ê¹Œì§€ ë°˜ë³µ
+								t2 = Util.getTime() - t1; // ì§€ê¸ˆ ì‹œê°„ì—ì„œ t1ì„ ëº€ë‹¤
+								int fallY = set + (int) ((t2) / 40); // ë‚™í•˜ëŸ‰ì„ ëŠ˜ë¦°ë‹¤.
+
+								foot = c1.getY() + c1.getHeight(); // ìºë¦­í„° ë°œ ìœ„ì¹˜ ì¬ ìŠ¤ìº”
+
+								if (foot + fallY > nowField) {
 									fallY = nowField - foot;
 								}
-								
-								imgY = imgY + fallY; // YÁÂÇ¥¿¡ ³«ÇÏ·® ´õÇÏ±â
-								foot = imgY + cookieHeight; // ÇöÀç ¹ß¹Ù´Ú À§Ä¡¸¦ ÀúÀå
 
-								if(jump == true) { // ¶³¾îÁö´Ù°¡ ´õºí Á¡ÇÁ¸¦ ÇÏ¸é ³«ÇÏÁßÁö
+								c1.setY(c1.getY() + fallY); // Yì¢Œí‘œì— ë‚™í•˜ëŸ‰ ë”í•˜ê¸°
+
+								if (c1.isJump()) { // ë–¨ì–´ì§€ë‹¤ê°€ ë”ë¸” ì í”„ë¥¼ í•˜ë©´ ë‚™í•˜ì¤‘ì§€
 									break;
 								}
-								
+
 								try {
 									Thread.sleep(10);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
 							}
-							fall = false; // while¹®ÀÌ ³¡³ª¸é ´Ù½Ã false
+							c1.setFall(false); // whileë¬¸ì´ ëë‚˜ë©´ ë‹¤ì‹œ false
 							
 							
-							/// ´õºíÁ¡ÇÁ Ãß°¡ÇÑ ºÎºĞ ½ÃÀÛ
-							if(jump == false) { // ¹ßÀÌ ¶¥¿¡ ´ê°í Á¡ÇÁ ÁßÀÌ X, ´õºí Á¡ÇÁ Ä«¿îÆ®¸¦ 0À¸·Î ¼öÁ¤
-								doubleJump = 0;
+							if (
+									downKeyOn // ë‹¤ìš´í‚¤ ëˆ„ë¥´ê³ 
+									&& !c1.isJump() // ì í”„ìƒíƒœ X
+									&& !c1.isFall() // ë‚™í•˜ìƒíƒœ X
+									&& c1.getImage() != cookieDown.getImage()) { // ì¿ í‚¤ì´ë¯¸ì§€ê°€ ìŠ¬ë¼ì´ë“œ ì´ë¯¸ì§€ê°€ X
+
+								c1.setImage(cookieDown.getImage());
+								; // ëˆ„ìš´ ì´ë¯¸ì§€ë¡œ ë³€ê²½
+
+							} else if (
+									!downKeyOn // ë‹¤ìš´í‚¤ ëˆ„ë¥¸ìƒíƒœ X
+									&& !c1.isJump() // ì í”„ìƒíƒœ X
+									&& !c1.isFall() // ë‚™í•˜ìƒíƒœ X
+									&& c1.getImage() != cookie.getImage()) { // ì¿ í‚¤ì´ë¯¸ì§€ê°€ ê¸°ë³¸ ì´ë¯¸ì§€ê°€ X
+
+								c1.setImage(cookie.getImage());
 							}
-							/// ´õºíÁ¡ÇÁ Ãß°¡ÇÑ ºÎºĞ ³¡
-							
-							
-							//ÃßÈÄ¿¡ Ãß°¡
-							if(downKeyOn == true && !jump && !fall & c!=cookieDown.getImage()) {
-								c = cookieDown.getImage(); // ´©¿î ÀÌ¹ÌÁö·Î º¯°æ
-							}else if(!downKeyOn && !jump && !fall && c!=cookie.getImage()) {
-								c = cookie.getImage();
+
+							if (!c1.isJump()) { // ë°œì´ ë•…ì— ë‹¿ê³ , ì í”„ì¤‘ì´ X, ë”ë¸”ì í”„ ì¹´ìš´íŠ¸ 0
+								c1.setCountJump(0);
 							}
-							
+
 						}
+						
 						try {
 							Thread.sleep(10);
 						} catch (InterruptedException e) {
@@ -333,15 +451,28 @@ public class CookieRunTest extends JFrame {
 					}
 				}
 			}).start();
-			
 
-			//////////////////// repaint Àü¿ë ½º·¹µå ////////////////////
+			
+			
+			/*repaint ì „ìš© ìŠ¤ë ˆë“œ*/
+			
 			new Thread(new Runnable() {
 
 				@Override
 				public void run() {
 					while (true) {
 						repaint();
+						
+						if(escKeyOn) {
+							while(escKeyOn) { //escí‚¤ ëˆ„ë¥´ë©´ repaint ë©ˆì¶¤
+								try {
+									Thread.sleep(10);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+						
 						try {
 							Thread.sleep(10);
 						} catch (InterruptedException e) {
@@ -351,214 +482,417 @@ public class CookieRunTest extends JFrame {
 				}
 			}).start();
 
-			/////////////////// ¹è°æ ¹«ÇÑ ¹İº¹//////////////////////
-			Thread re = new Thread(new Runnable() {
-				@Override // ¹è°æ Ä³¸¯ÅÍ¿Í ¹İ´ë¹æÇâÀ¸·Î ¿·À¸·Î ÀÌµ¿
-				public void run() {
-					while (true) {
-						b1 = b1 - 5;
-						b2 = b2 - 5;
 
-						if (b1 < -(b.getWidth(null))) {
-							b1 = b.getWidth(null) - 5;
-						}
-						if (b2 < -(b.getWidth(null))) {
-							b2 = b.getWidth(null) - 5;
-						}
-						
-						repaint();
-						try {
-							Thread.sleep(20);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			});
-			re.start();// ¹è°æ ¹«ÇÑ ¹İº¹ ³¡
-
-			//////////////////// Å°ÀÌº¥Æ®(¾÷, ´Ù¿î) ///////////////////////
+			/* í‚¤ ì–´ëŒ‘í„° */
 			this.addKeyListener(new KeyAdapter() {
-				
+
 				@Override
 				public void keyPressed(KeyEvent e) {
-					if (e.getKeyCode() == KeyEvent.VK_SPACE && doubleJump < 2) { //jump == false
-						new Up();
-						
-					}
-					if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-						downKeyOn = false;
-						if(c != cookieDown.getImage() && !jump && !fall) {
-							c = cookieDown.getImage(); //´©¿üÀ» ¶§ ÀÌ¹ÌÁö º¯°æ
+					
+					
+					if(e.getKeyCode() == KeyEvent.VK_ESCAPE) { // ESC í‚¤ë¥¼ ëˆ„ë¥´ë©´ ì¼ì‹œì •ì§€í•˜ê¸°
+						if(!escKeyOn) {
+							escKeyOn = true;
+							add(escBtn); // escë¥¼ ëˆ„ë¥´ë©´ escKeyOnë³€ìˆ˜ê°€ trueê°€ ë˜ê³  ë²„íŠ¼ì„ í™”ë©´ì— ë³´ì´ê²Œí•¨
+							repaint(); // í™”ë©´ ì–´ë‘¡ê²Œ í•˜ê¸° ìœ„í•œ repaint
+						}else {
+							remove(escBtn);
+							escKeyOn = false;
 						}
 					}
+					
+					if(!escKeyOn) { // escê°€ ì—†ì„ ë•Œì—ë§Œ ì‘ë™
+						if (e.getKeyCode() == KeyEvent.VK_SPACE && c1.getCountJump() < 2) { // jump == false
+							new Up();
+
+						}
+						if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+
+							downKeyOn = true;
+
+							if (
+								c1.getImage() != cookieDown.getImage()
+								&& !c1.isJump() 
+								&& !c1.isFall()) {
+
+								c1.setImage(cookieDown.getImage());// ëˆ„ì› ì„ ë•Œ ì´ë¯¸ì§€ ë³€ê²½
+							}
+						}
+					}
+					
 				}
-				
-				
 
 				@Override
 				public void keyReleased(KeyEvent e) {
-					if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-						c = cookie.getImage();
-					}
 					if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-						downKeyOn = false;
-						if(c != cookie.getImage() && !jump  && !fall) {
-							c = cookie.getImage();
+
+						downKeyOn = false; // downKeyOn ë³€ìˆ˜ë¥¼ falseë¡œ
+
+						if (
+							c1.getImage() != cookie.getImage() // ì¿ í‚¤ì´ë¯¸ì§€ê°€ ê¸°ë³¸ì´ë¯¸ì§€ X
+							&& !c1.isJump()  // ì í”„ì¤‘ X
+							&& !c1.isFall()) { // ë‚™í•˜ì¤‘ X
+
+							c1.setImage(cookie.getImage()); // ì´ë¯¸ì§€ë¥¼ ê¸°ë³¸ì´ë¯¸ì§€ë¡œ ë³€ê²½
 						}
 					}
+					
 				}
 			});
 		}
 
+		
+		/* í™”ë©´ êµ¬í˜„ */
+		
 		@Override
-		protected void paintComponent(Graphics buffg) {
+		protected void paintComponent(Graphics g) {
 			
-			
-			if(buffg == null) {
+			// ë”ë¸”ë²„í¼
+			if (buffg == null) {
 				buffImage = createImage(this.getWidth(), this.getHeight());
-				if(buffImage == null) {
-					System.out.println("´õºí ¹öÆÛ¸µ¿ë ¿ÀÇÁ ½ºÅ©¸° »ı¼º ½ÇÆĞ");
-				}else {
+				if (buffImage == null) {
+					System.out.println("ë”ë¸” ë²„í¼ë§ìš© ì˜¤í”„ ìŠ¤í¬ë¦° ìƒì„± ì‹¤íŒ¨");
+				} else {
 					buffg = buffImage.getGraphics();
 				}
 			}
-			super.paintComponent(buffg);
-			//¿À·ù ¼öÁ¤ÈÄ ´õºí ¹öÆÛ Ãß°¡
-			
-			buffg.drawImage(dj, 0, 0, this);
-			buffg.drawImage(buffImage,0,0,this);
-			
-			buffg.drawImage(b, b1, 0, this); // ¹è°æ
-			buffg.drawImage(b, b2, 0, this); // µÚ6µû¶ó ¿À´Â ¹è°æ
-			buffg.drawImage(bgTwo, 0, 0, 970, 500, this); // ¶¥ ¹è°æ
-			buffg.drawImage(c, imgX, imgY, null); // Ä³¸¯ÅÍ
-			
 
+			// íˆ¬ëª…ë„
+			Graphics2D g2 = (Graphics2D) buffg;
+
+			super.paintComponent(buffg); // ì´ì „ ì´ë¯¸ì§€ë¥¼ ì§€ìš´ë‹¤.
+
+			// ë°°ê²½
+			buffg.drawImage(b11.getImage(), b11.getX(), 0, null);
+			buffg.drawImage(b12.getImage(), b12.getX(), 0, null);
+
+			// ê³ ì • ë°°ê²½
+			buffg.drawImage(bg2.getImage(), 0, 0, null);
+						
+			// ë°œíŒ
 			for (int i = 0; i < fieldList.size(); i++) {
-				Foot tempFoot = fieldList.get(i);
-				buffg.drawImage(tempFoot.getImage(), tempFoot.getX(), tempFoot.getY(), tempFoot.getWidth(), tempFoot.getHeight(), null);
+
+				Field tempFoot = fieldList.get(i);
+
+				if (tempFoot.getX() > -90) {
+					
+					buffg.drawImage(
+
+							tempFoot.getImage(), 
+							tempFoot.getX(), 
+							tempFoot.getY(),
+							tempFoot.getWidth(),
+							tempFoot.getHeight(), 
+							null);
+				}
 			}
+
+			// ì ¤ë¦¬
+			for (int i = 0; i < jellyList.size(); i++) {
+
+				Jelly tempJelly = jellyList.get(i);
+
+				if (tempJelly.getX() > -90) {
+
+					buffg.drawImage(
+
+							tempJelly.getImage(), 
+							tempJelly.getX(), 
+							tempJelly.getY(), 
+							tempJelly.getWidth(),
+							tempJelly.getHeight(), 
+							null);
+				}
+			}
+
+			// ì¥ì• ë¬¼
+			for (int i = 0; i < tacleList.size(); i++) {
+
+				Tacle tempTacle = tacleList.get(i);
+
+				if (tempTacle.getX() > -90 && tempTacle.getX() < 810) {
+
+					buffg.drawImage(
+
+							tempTacle.getImage(), 
+							tempTacle.getX(), 
+							tempTacle.getY(), 
+							tempTacle.getWidth(),
+							tempTacle.getHeight(), 
+							null);
+				}
+			}
+
 			
+			/* ì ¤ë¦¬ ì´ë™ ë° ë™ì‘ */
 			
-			
-			////////////////// Ä³¸¯ÅÍ°¡ ¾ÆÀÌÅÛÀ» ¸ÔÀ¸¸é ¹Ù²î°Ô ÇÏ±â //////////////////
 			for (int i = 0; i < jellyList.size(); i++) {
 				Jelly tempJelly = jellyList.get(i);
-				
-				if(tempJelly.getX() < -90) {
+
+				if (tempJelly.getX() < -90) {
 					fieldList.remove(tempJelly);
+
+				} else {
+					tempJelly.setX(tempJelly.getX() - gameSpeed);
 					
-				}else {
-					tempJelly.setX(tempJelly.getX() - 1);
-					
-					if(tempJelly.getY() > imgY && tempJelly.getY() < imgY + cookieHeight // ÀÓ½Ã, ÃßÈÄ¿¡ ¼öÁ¤
-					&& tempJelly.getX() > 0 && tempJelly.getX() < 80) {
-						tempJelly.setImage(effect.getImage());
+					foot = c1.getY() + c1.getHeight(); // ìºë¦­í„° ë°œ ìœ„ì¹˜ ì¬ ìŠ¤ìº”
+
+					if (	c1.getImage() != cookieDown.getImage()
+							&& tempJelly.getX() >= c1.getX()
+							&& tempJelly.getX() <= face
+							&& tempJelly.getY() >= c1.getY()
+							&& tempJelly.getY() <= foot
+							&& tempJelly.getImage() != effect.getImage()){
+							
+						tempJelly.setImage(effect.getImage()); // ì ¤ë¦¬ ì´ë¯¸ì§€ ì´í™íŠ¸ë¡œ ë°”ê¾¸ê¸°
+						resultScore = resultScore + tempJelly.getScore();
+						
+					}else if(
+							c1.getImage() == cookieDown.getImage()
+							&& tempJelly.getX() + tempJelly.getWidth()*20/100 >= c1.getX()
+							&& tempJelly.getX() + tempJelly.getWidth()*80/100 <= face
+							&& tempJelly.getY() + tempJelly.getHeight()*20/100 >= c1.getY() + c1.getHeight()*1/3
+							&& tempJelly.getY() + tempJelly.getHeight()*80/100 <= foot
+							&& tempJelly.getImage() != effect.getImage()) {
+							
+							tempJelly.setImage(effect.getImage());
+							resultScore = resultScore + tempJelly.getScore();
 					}
 				}
-				
-				buffg.drawImage(tempJelly.getImage(), tempJelly.getX(), tempJelly.getY(), tempJelly.getWidth(), tempJelly.getHeight(), null);	
+
+				buffg.drawImage(tempJelly.getImage(), tempJelly.getX(), tempJelly.getY(), tempJelly.getWidth(),
+						tempJelly.getHeight(), null);
 			}
-			
-			
-			
-			/////////////////// Ä³¸¯ÅÍ°¡ Àå¾Ö¹°¿¡ ºÎµúÈ÷¸é Ä³¸¯ÅÍ »óÅÂ°¡ ¹«ÀûÀ¸·Î º¯°æ /////////////////////////
-			for (int i = 0; i < attackList.size(); i++) {
-				Attack tempAttack = attackList.get(i);
+
+			/////////////////// ìºë¦­í„°ê°€ ì¥ì• ë¬¼ì— ë¶€ë”ªíˆë©´ ìºë¦­í„° ìƒíƒœê°€ ë¬´ì ìœ¼ë¡œ ë³€ê²½ /////////////////////////
+			for (int i = 0; i < tacleList.size(); i++) {
+				Tacle tempTacle = tacleList.get(i);
+
 				
-				
-				if(tempAttack.getY() > imgY && tempAttack.getY() < imgY + cookieHeight
-				&& tempAttack.getX() > 0 && tempAttack.getX() < 80) {
-					new Thread(new Runnable() {
+				////////////////// ë¬´ì  /////////////////////
+				if (tempTacle.getX() < -90) {
+					fieldList.remove(tempTacle);
+				} else {
+					tempTacle.setX(tempTacle.getX() - gameSpeed);
+					
+					foot = c1.getY() + c1.getHeight(); // ìºë¦­í„° ë°œ ìœ„ì¹˜ ì¬ìŠ¤ìº”
+					
+					if ( // ë¬´ì ìƒíƒœ X, ìºë¦­í„°ì˜ ë²”ìœ„ ì•ˆì— ì¥ì• ë¬¼ì´ ìˆìœ¼ë©´
+							!c1.isInvincible()
+							&& tempTacle.getX() >= c1.getX()
+							&& tempTacle.getX() <= face
+							&& tempTacle.getY() >= c1.getY()
+							&& tempTacle.getY() <= foot) {
 						
-						@Override
-						public void run() {
-							try {
-								c = cookieAttack.getImage();
-								Thread.sleep(3000);
-								c = cookie.getImage();
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-					}).start();
-				}
+							hit();
+					}
+				}			
 				
-				
-				buffg.drawImage(tempAttack.getImage(), tempAttack.getX(), tempAttack.getY(), tempAttack.getWidth(), tempAttack.getHeight(), null);
+				buffg.drawImage(tempTacle.getImage(), tempTacle.getX(), tempTacle.getY(), tempTacle.getWidth(),
+						tempTacle.getHeight(), null);
 			}
+
 			
-			buffg.drawImage(buffImage, 0, 0, null);
+						
+			// ì¿ í‚¤ ì•ŒíŒŒê°’
+			alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) c1.getAlpha() / 255);
+			g2.setComposite(alphaComposite);
+
+			// ì¿ í‚¤ ê·¸ë¦¬ê¸°
+			buffg.drawImage(c1.getImage(), c1.getX(), c1.getY(), c1.getWidth(), c1.getHeight(), null);
+
+			// ì•ŒíŒŒê°’ ë˜ëŒë¦¬ê¸°
+			alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 255 / 255);
+			g2.setComposite(alphaComposite);
+
+			// ì ìˆ˜
+			buffg.drawString("Score : " +Integer.toString(resultScore), 700, 30);
+
+			// ì²´ë ¥ê²Œì´ì§€
+			buffg.fillRect(50, 40, c1.getHealth() /2, 30);
+
 			
-//			buffg.drawLine(0, 0, 0, 500); // ¹üÀ§ º¸±â
-//			buffg.drawLine(80, 0, 80, 500); // ¹üÀ§ º¸±â
+			// í™”ë©´ì— ì¶œë ¥
+			g.drawImage(buffImage, 0, 0, null);
+
+//			buffg.drawLine(0, 0, 0, 500); // ë²”ìœ„ ë³´ê¸°
+//			buffg.drawLine(80, 0, 80, 500); // ë²”ìœ„ ë³´ê¸°
 		}
 
 	}
 
-	class Up{
-		
-		public Up() {			
-			///////////////////////////////// Á¡ÇÁ µ¿ÀÛ ±¸Çö ///////////////////////////
+	class Up {
+
+		public Up() {
+			///////////////////////////////// ì í”„ ë™ì‘ êµ¬í˜„ ///////////////////////////
 			new Thread(new Runnable() {
-				
+
 				@Override
 				public void run() {
-					/// ´õºíÁ¡ÇÁ Ãß°¡ÇÑºÎºĞ ½ÃÀÛ
-					doubleJump++; // Á¡ÇÁ È½¼ö Áõ°¡
-					int nowJump = doubleJump; // ´õºíÁ¡ÇÁ ÀúÀå
-					
-					jump = true; //Á¡ÇÁÁßÀ¸·Î º¯°æ
-					
-					if(doubleJump == 1) {
-						System.out.println("Á¡ÇÁ");
-						c = cookieJump.getImage();
 
-					}else if(doubleJump == 2) {
-						System.out.println("´õºíÁ¡ÇÁ");
-						c = cookieDoubleJump.getImage();
-					}
-					
-					/// ´õºíÁ¡ÇÁ Ãß°¡ÇÑºÎºĞ ³¡
-					
-					//// Á¡ÇÁ ±¸Çö
-					
-					// ¹ß¹Ù´Ú À§Ä¡´Â ÀÌ¹ÌÁöÀÇ YÀ§Ä¡ + ÀÌ¹ÌÁöÀÇ ³ôÀÌ
-					int foot = imgY + cookieHeight; // ¹ß¹Ù´ÚÀÇ À§Ä¡ YÁÂÇ¥ + ÀÌ¹ÌÁöÀÇ ³ôÀÌ
-						long t1 = getTime(); // ÇöÀç½Ã°£ °¡Á®¿À±â
-						long t2;
-						int set = 8; // Á¡ÇÁ °è¼ö ¼³Á¤(0~20)À¸·Î ¹Ù²ãº¸±â
-						int jumpY = 8; // 1ÀÌ»óÀ¸·Î¸¸ ¼³Á¤ÇÏ¸é µÈ´Ù. (while¹® Á¶°Ç ¶§¹®¿¡)
-						while(jumpY > 0) { // ³ôÀÌ°¡ 0ÀÏ ¶§ ±îÁö ¹İº¹
-							t2 = getTime() - t1;  // Áö±İ ½Ã°£¿¡¼­ t1 »©±â
-							jumpY = set - (int)((t2) / 40); // jump ¼¼ÆÃ
-							imgY = imgY - jumpY; //Y°ª º¯°æ
-							foot = imgY + cookieHeight; //¹ß¹Ù´Ú À§Ä¡ ÀúÀå
-							repaint();
-							
-							/// ´õºíÁ¡ÇÁ Ãß°¡ÇÑºÎºĞ ½ÃÀÛ
-							if(nowJump != doubleJump) { //Á¡ÇÁ°¡ ÇÑ¹ø ´õ µÇ¸é Ã¹¹øÂ° Á¡ÇÁ´Â ¸ØÃã
-								break;
-							}
-							/// ´õºíÁ¡ÇÁ Ãß°¡ÇÑºÎºĞ ³¡
-							System.out.println(jumpY);
-							System.out.println(foot);
-							try {
-								Thread.sleep(10);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
+					c1.setCountJump(c1.getCountJump() + 1); // ì í”„íšŸìˆ˜ ì¦ê°€
+
+					int nowJump = c1.getCountJump();
+					int nowY = c1.getY();
+
+					c1.setJump(true);
+
+					if (c1.getCountJump() == 1) {
 						
-						if(nowJump == doubleJump) { // Á¡ÇÁ°¡ ÁøÂ¥ ³¡³µÀ» ¶§¸¦ È®ÀÎ
-							jump = false;
+						System.out.println("ì í”„");
+						c1.setImage(cookieJump.getImage());
+
+					} else if (c1.getCountJump() == 2) {
+						
+						System.out.println("ë”ë¸”ì í”„");
+						c1.setImage(cookieDJump.getImage());
+					}
+
+					long t1 = Util.getTime(); // í˜„ì¬ì‹œê°„ ê°€ì ¸ì˜¤ê¸°
+					long t2;
+					int set = 8; // ì í”„ ê³„ìˆ˜ ì„¤ì •(0~20)ìœ¼ë¡œ ë°”ê¿”ë³´ê¸°
+					int jumpY = 1; // 1ì´ìƒìœ¼ë¡œë§Œ ì„¤ì •í•˜ë©´ ëœë‹¤. (whileë¬¸ ì¡°ê±´ ë•Œë¬¸ì—)
+
+					while (jumpY >= 0) { // ë†’ì´ê°€ 0ì¼ ë•Œ ê¹Œì§€ ë°˜ë³µ
+
+						t2 = Util.getTime() - t1; // ì§€ê¸ˆ ì‹œê°„ì—ì„œ t1 ë¹¼ê¸°
+						jumpY = set - (int) ((t2) / 40); // jump ì„¸íŒ…
+
+						c1.setY(c1.getY() - jumpY); // Yê°’ ë³€ê²½
+
+						/// ë”ë¸”ì í”„ ì¶”ê°€í•œë¶€ë¶„ ì‹œì‘
+						if (nowJump != c1.getCountJump()) { // ì í”„ê°€ í•œë²ˆ ë” ë˜ë©´ ì²«ë²ˆì§¸ ì í”„ëŠ” ë©ˆì¶¤
+							break;
+						}
+
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
 						}
 					}
+
+					if (nowJump == c1.getCountJump()) { // ì í”„ê°€ ì§„ì§œ ëë‚¬ì„ ë•Œë¥¼ í™•ì¸
+						c1.setJump(false);
+					}
+				}
 			}).start();
 		}
 	}
+	
+	/* ìºë¦­í„° ì²´ë ¥ ìì—° ê°ì†Œ, ë°°ê²½ì´ë™ ë©”ì„œë“œ */
+	void mapMove() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					if(runPage > 800) { //í•œ í”„ë ˆì„ì„ ì´ë™í•˜ë©´ ì²´ë ¥ì´ 10ì”© ê°ì†Œ (ì¶”í›„ ìˆ˜ì •)
+						c1.setHealth(c1.getHealth() - 10);
+						runPage = 0;
+					}
+					runPage += gameSpeed; // í™”ë©´ì´ ì´ë™í•˜ë©´ reunPageì— ì´ë™í•œ ë§Œí¼ ì €ì¥
+					
+					// ë°°ê²½ ì´ë™
+					if (b11.getX() < -(b11.getWidth() - 1)) {
+						b11.setX(b11.getWidth());
+					}
+					
+					if (b12.getX() < -(b12.getWidth() - 1)) {
+						b12.setX(b12.getWidth());
+					}
+					
+					// ë°°ê²½ì˜ Xì¢Œí‘œë¥¼ -1 í•´ì¤€ë‹¤ (ì™¼ìª½ìœ¼ë¡œ íë¦„)
+					b11.setX(b11.getX() - gameSpeed / 3);
+					b12.setX(b12.getX() - gameSpeed / 3);
+					
+					
+					/* ë°œíŒ ì´ë™ */
+					for (int i = 0; i < fieldList.size(); i++) {
+						
+						Field tempField = fieldList.get(i); // ì„ì‹œ ë³€ìˆ˜ì— ë¦¬ìŠ¤íŠ¸ ì•ˆì— ìˆëŠ” ê°œë³„ ë°œíŒ ë¶ˆëŸ¬ì˜¤ê¸°
+						
+						if(tempField.getX() < -90) { // ë°œíŒì˜ xì¢Œí‘œê°€ -90ë¯¸ë§Œì´ë©´ í•´ë‹¹ë°œíŒ ì œê±°
+							fieldList.remove(tempField);
+						}else {
+							tempField.setX(tempField.getX() - gameSpeed); // ì¡°ê±´ í•´ë‹¹ Xì‹œ, xì¢Œí‘œ ì¤„ì´ê¸°
+						}
+					} 
+				}
+			}
+		}).start();
+	} // end of mapMove
+	
+	
+	
+	/* ìºë¦­í„°ê°€ ê³µê²©ë‹¹í–ˆì„ ë•Œì˜ ë©”ì„œë“œ */
+	
+	void hit() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// ë¬´ì ìƒíƒœ
+				c1.setInvincible(true);
 
+				System.out.println("ë¬´ì ìƒíƒœ");
+
+				// ì¿ í‚¤ ì²´ë ¥
+				c1.setHealth(c1.getHealth() - 100); 
+				
+				// ê²Œì´ì§€ í™•ì¸
+				System.out.println(c1.getHealth()); 
+				
+				// ì¿ í‚¤ íˆ¬ëª…ë„
+				c1.setAlpha(80);
+
+				// ì¿ í‚¤ ëª¨ì…˜ ë³€ê²½
+				c1.setImage(cookieHit.getImage());
+
+				// 0.5ì´ˆ ëŒ€ê¸°
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				// ë‹¤ì‹œ ê¸°ë³¸ ì´ë¯¸ì§€ë¡œ ë³€ê²½
+				if (c1.getImage() == cookieHit.getImage()) {
+					c1.setImage(cookie.getImage());
+				}
+
+				// 2.5ì´ˆë™ì•ˆ ê¹œë¹¡ì´ê¸°
+				for (int j = 0; j < 11; j++) {
+					if (c1.getAlpha() == 80) {
+						c1.setAlpha(160);
+					} else {
+						c1.setAlpha(80);
+					}
+					try {
+						Thread.sleep(250);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				c1.setAlpha(255);
+
+				c1.setInvincible(false);
+				System.out.println("ë¬´ì ì¢…ë£Œ");
+			}
+		}).start();
+	} // end of hit
+
+	/* ë‚™í•˜ ìŠ¤ë ˆë“œ */
+	void fall() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+			}
+		}).start();
+	}
+	
 	public static void main(String[] args) {
 		new CookieRunTest();
 	}

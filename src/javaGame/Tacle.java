@@ -1,7 +1,5 @@
-
 package javaGame;
 
-//Jelly 클래스 생성
 import java.awt.Image;
 
 import lombok.AllArgsConstructor;
@@ -11,14 +9,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Jelly{
-	private Image image; // 젤리 이미지
+public class Tacle {
+	private Image image; // 장애물 이미지
 	
-	// 젤리들의 좌표와 크기
+	// 장애물의 좌표, 넓이, 높이
 	private int x;
 	private int y;
 	private int width;
 	private int height;
 	
-	private int score;
+	// 장애물 상태
+	private int state;
 }
